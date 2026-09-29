@@ -27,18 +27,21 @@
     "lint": "oxlint",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "typecheck": "nuxt typecheck",
+    "typecheck": "nuxt typecheck && tsc --noEmit -p test/browser/tsconfig.json",
     "test": "vitest run",
     "test:unit": "vitest run app shared server/utils",
     "test:watch": "vitest app shared server/utils",
     "check": "yarn lint && yarn format:check && yarn typecheck && yarn test",
-    "start": "node bin/openui.mjs"
+    "start": "node bin/openui.mjs",
+    "test:browser": "nuxt build && playwright test",
+    "test:browser:ui": "playwright test --ui"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.129",
     "@kikuchan/hexdump": "0.1.0-alpha.9",
     "@nuxt/icon": "^2.5.1",
     "@nuxt/test-utils": "^4.2.0",
+    "@playwright/test": "^1.62.1",
     "@shikijs/markdown-it": "^3.22.0",
     "@shikijs/transformers": "^3.22.0",
     "@tailwindcss/typography": "^0.5.19",
