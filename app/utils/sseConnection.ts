@@ -1,4 +1,4 @@
-import { parseSsePacket, splitSseBlocks } from 'agent-wire';
+import { parseSsePacket, splitSseBlocks } from 'agent-conduit';
 import type { SsePacket } from '../types/sse';
 import { normalizeBaseUrl } from './url';
 
@@ -19,7 +19,7 @@ export type SseConnection = {
   isConnected: () => boolean;
 };
 
-export { parseSsePacket, splitSseBlocks } from 'agent-wire';
+export { parseSsePacket, splitSseBlocks } from 'agent-conduit';
 
 export function createSseConnection(callbacks: SseConnectionCallbacks): SseConnection {
   let abortController: AbortController | undefined;

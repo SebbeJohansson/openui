@@ -135,7 +135,7 @@ export interface ClaudeDenyResponse {
 
 // ---------------------------------------------------------------------------
 // Stored JSONL entry shapes (from ~/.claude/projects/<dir>/<session>.jsonl),
-// shared with my-widget through agent-wire
+// shared with my-widget through agent-conduit
 // ---------------------------------------------------------------------------
 
 export type {
@@ -143,4 +143,4 @@ export type {
   StoredEntry,
   StoredSummaryEntry,
   StoredUserEntry,
-} from 'agent-wire';
+} from 'agent-conduit';

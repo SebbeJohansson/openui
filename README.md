@@ -208,13 +208,20 @@ session; it sees one flat list of projects and sessions.
 ## Development
 
 Reading Claude Code's session files and parsing OpenCode's event stream come
-from [agent-wire](https://github.com/SebbeJohansson/agent-wire), shared with
-my-widget. For now it is linked from a checkout next to this one, built once:
+from [agent-conduit](https://github.com/SebbeJohansson/agent-conduit), shared with
+my-widget, and installed from npm:
 
 ```sh
-(cd ../agent-wire && yarn install && yarn build)
 yarn install
 yarn dev
+```
+
+To work on agent-conduit at the same time, point `AGENT_CONDUIT_DIR` in `.env` at a
+checkout next to this one and keep its build running:
+
+```sh
+echo 'AGENT_CONDUIT_DIR=../agent-conduit' >> .env
+(cd ../agent-conduit && yarn install && yarn dev)
 ```
 
 The dev server listens on `http://localhost:5173`. The built server and `npx openui`

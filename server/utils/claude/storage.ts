@@ -3,7 +3,7 @@
  * Reads ~/.claude/projects/ from disk to enumerate Claude Code projects and sessions.
  * Sessions are stored as JSONL files: one file per session, one entry per message.
  *
- * The reading itself is agent-wire's, shared with my-widget; this file points it
+ * The reading itself is agent-conduit's, shared with my-widget; this file points it
  * at this machine's ~/.claude and adds the sessions created here that Claude has
  * not written yet.
  */
@@ -16,12 +16,12 @@ import {
   listClaudeProjects as listProjectsIn,
   readEntries,
   readSessionMeta as readMetaWith,
-} from 'agent-wire';
-import type { ClaudeProject, ClaudeSessionMeta, StoredEntry } from 'agent-wire';
-import { nodeFileReader } from 'agent-wire/node';
+} from 'agent-conduit';
+import type { ClaudeProject, ClaudeSessionMeta, StoredEntry } from 'agent-conduit';
+import { nodeFileReader } from 'agent-conduit/node';
 
-export { decodeProjectDir, encodeProjectDir } from 'agent-wire';
-export type { ClaudeProject, ClaudeSessionMeta } from 'agent-wire';
+export { decodeProjectDir, encodeProjectDir } from 'agent-conduit';
+export type { ClaudeProject, ClaudeSessionMeta } from 'agent-conduit';
 
 // ---------------------------------------------------------------------------
 // Paths

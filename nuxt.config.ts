@@ -1,4 +1,5 @@
 import { execSync } from 'node:child_process';
+import { resolve } from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 
 /** Short git revision shown in the UI; 'dev' when built outside a checkout (npm tarball). */
@@ -23,10 +24,20 @@ const baseURL = process.env.NUXT_APP_BASE_URL ?? '/';
 const antiFoucScript =
   "(function(){var PREFIX='opencode.';var THEME_KEY=PREFIX+'settings.theme.v1';var SEEDS_KEY=PREFIX+'settings.customThemeSeeds.v1';var BG_MAP={dark:'#111a2c',light:'#f1f5f9',dracula:'#343746','solarized-dark':'#073642'};var bg=BG_MAP.dark;try{var id=localStorage.getItem(THEME_KEY);if(id==='custom'){var seeds=JSON.parse(localStorage.getItem(SEEDS_KEY)||'{}');if(seeds.background)bg=seeds.background;}else if(id&&BG_MAP[id]){bg=BG_MAP[id];}}catch(e){}document.documentElement.style.setProperty('--theme-bg-surface',bg);})();";
 
+/**
+ * agent-conduit, which reads Claude Code's session files, comes from npm. Set
+ * AGENT_CONDUIT_DIR=../agent-conduit in .env to run against a local checkout's dist/
+ * instead (`yarn dev` there rebuilds it on save). .env is not committed, so CI
+ * and the npm build always get the published package.
+ */
+const agentConduitDir = process.env.AGENT_CONDUIT_DIR;
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-09-01',
   ssr: false,
   devtools: { enabled: true },
+
+  alias: agentConduitDir ? { 'agent-conduit': resolve(agentConduitDir, 'dist') } : {},
   // The Vite-era dev port. The built server (and `npx openui`) still defaults
   // to 3000; PORT or --port override either.
   devServer: { port: 5173 },

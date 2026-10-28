@@ -133,7 +133,7 @@ describe('readSessionMeta', () => {
     expect(await readSessionMeta(join(dir, 'nope.jsonl'), '/hint', '-x')).toBeNull();
   });
 
-  it('uses the file\'s modification time when the entries carry no usable timestamp', async () => {
+  it("uses the file's modification time when the entries carry no usable timestamp", async () => {
     const path = await writeJsonl('-x', 'session-a.jsonl', [userEntry({ timestamp: undefined })]);
 
     const meta = await readSessionMeta(path, '/hint', '-x');

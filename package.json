@@ -36,6 +36,9 @@
     "test:browser": "nuxt build && playwright test",
     "test:browser:ui": "playwright test --ui"
   },
+  "dependencies": {
+    "agent-conduit": "^0.2.0"
+  },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.129",
     "@kikuchan/hexdump": "0.1.0-alpha.9",
@@ -65,8 +68,5 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "yarn@4.17.0",
-  "dependencies": {
-    "agent-wire": "portal:../agent-wire"
-  }
+  "packageManager": "yarn@4.17.0"
 }
