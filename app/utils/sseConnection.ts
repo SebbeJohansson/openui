@@ -1,3 +1,4 @@
+import { parseSsePacket, splitSseBlocks } from 'agent-wire';
 import type { SsePacket } from '../types/sse';
 import { normalizeBaseUrl } from './url';
 
@@ -18,38 +19,7 @@ export type SseConnection = {
   isConnected: () => boolean;
 };
 
-/**
- * Split an SSE text buffer on blank lines. `blocks` are complete frames;
- * `rest` is the trailing partial frame to keep for the next chunk.
- */
-export function splitSseBlocks(buffer: string): { blocks: string[]; rest: string } {
-  const blocks = buffer.split('\n\n');
-  const rest = blocks.pop() || '';
-  return { blocks, rest };
-}
-
-/** Parse one `data:` payload into an SsePacket, or null when malformed. */
-export function parseSsePacket(raw: string): SsePacket | null {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    return null;
-  }
-  if (!parsed || typeof parsed !== 'object') return null;
-  const record = parsed as Record<string, unknown>;
-  if (!record.payload || typeof record.payload !== 'object') return null;
-  const payload = record.payload as Record<string, unknown>;
-  if (typeof payload.type !== 'string') return null;
-  if (!payload.properties || typeof payload.properties !== 'object') return null;
-  return {
-    directory: typeof record.directory === 'string' ? record.directory : '',
-    payload: {
-      type: payload.type,
-      properties: payload.properties as Record<string, unknown>,
-    },
-  };
-}
+export { parseSsePacket, splitSseBlocks } from 'agent-wire';
 
 export function createSseConnection(callbacks: SseConnectionCallbacks): SseConnection {
   let abortController: AbortController | undefined;

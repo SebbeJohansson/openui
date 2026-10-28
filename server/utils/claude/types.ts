@@ -134,58 +134,13 @@ export interface ClaudeDenyResponse {
 }
 
 // ---------------------------------------------------------------------------
-// Stored JSONL entry shapes (from ~/.claude/projects/<dir>/<session>.jsonl)
+// Stored JSONL entry shapes (from ~/.claude/projects/<dir>/<session>.jsonl),
+// shared with my-widget through agent-wire
 // ---------------------------------------------------------------------------
 
-export interface StoredUserEntry {
-  type: 'user';
-  uuid: string;
-  parentUuid: string | null;
-  timestamp: string;
-  sessionId: string;
-  cwd: string;
-  gitBranch?: string;
-  message: {
-    role: 'user';
-    content:
-      | string
-      | Array<{ type: string; text?: string; tool_use_id?: string; content?: unknown }>;
-  };
-}
-
-export interface StoredAssistantEntry {
-  type: 'assistant';
-  uuid: string;
-  parentUuid: string | null;
-  timestamp: string;
-  sessionId: string;
-  cwd: string;
-  gitBranch?: string;
-  message: {
-    role: 'assistant';
-    content: Array<{
-      type: string;
-      text?: string;
-      thinking?: string;
-      id?: string;
-      name?: string;
-      input?: Record<string, unknown>;
-    }>;
-    model?: string;
-    usage?: { input_tokens: number; output_tokens: number };
-  };
-}
-
-export interface StoredSummaryEntry {
-  type: 'summary';
-  summary: string;
-  leafUuid: string;
-  timestamp?: string;
-  sessionId?: string;
-}
-
-export type StoredEntry =
-  | StoredUserEntry
-  | StoredAssistantEntry
-  | StoredSummaryEntry
-  | { type: string; [key: string]: unknown };
+export type {
+  StoredAssistantEntry,
+  StoredEntry,
+  StoredSummaryEntry,
+  StoredUserEntry,
+} from 'agent-wire';

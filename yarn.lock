@@ -3011,6 +3011,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"agent-wire@portal:../agent-wire::locator=openui%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "agent-wire@portal:../agent-wire::locator=openui%40workspace%3A."
+  languageName: node
+  linkType: soft
+
 "alien-signals@npm:^3.0.0":
   version: 3.1.2
   resolution: "alien-signals@npm:3.1.2"
@@ -6209,6 +6215,7 @@ __metadata:
     "@types/node": "npm:^24.13.3"
     "@vue/test-utils": "npm:^2.5.0"
     "@xterm/xterm": "npm:^6.0.0"
+    agent-wire: "portal:../agent-wire"
     happy-dom: "npm:^20.13.2"
     markdown-it: "npm:^14.1.1"
     nuxt: "npm:^4.5.2"

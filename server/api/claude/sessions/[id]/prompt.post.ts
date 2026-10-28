@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   const meta = await findSessionMeta(id);
   const directory = meta?.directory ?? getClaudeSession(id)?.directory ?? process.cwd();
-  const isResume = meta != null && Boolean(meta.jsonlPath);
+  const isResume = meta != null && Boolean(meta.transcriptPath);
 
   const session = await ensureRunning(id, directory, isResume);
   try {

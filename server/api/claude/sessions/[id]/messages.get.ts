@@ -7,9 +7,9 @@ import { translateStoredEntries } from '../../../../utils/claude/translator';
 export default defineEventHandler(async (event): Promise<ClaudeMessagesResponse> => {
   const id = rawSessionId(getRouterParam(event, 'id') ?? '');
   const meta = await findSessionMeta(id);
-  if (!meta || !meta.jsonlPath) return { messages: [], parts: [] };
+  if (!meta || !meta.transcriptPath) return { messages: [], parts: [] };
 
-  const entries = await readAllEntries(meta.jsonlPath);
+  const entries = await readAllEntries(meta.transcriptPath);
   const messages: unknown[] = [];
   const parts: unknown[] = [];
   for (const envelope of translateStoredEntries(entries, id, meta.directory)) {

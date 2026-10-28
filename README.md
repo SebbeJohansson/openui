@@ -207,7 +207,12 @@ session; it sees one flat list of projects and sessions.
 
 ## Development
 
+Reading Claude Code's session files and parsing OpenCode's event stream come
+from [agent-wire](https://github.com/SebbeJohansson/agent-wire), shared with
+my-widget. For now it is linked from a checkout next to this one, built once:
+
 ```sh
+(cd ../agent-wire && yarn install && yarn build)
 yarn install
 yarn dev
 ```

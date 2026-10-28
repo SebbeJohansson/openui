@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
@@ -66,14 +66,14 @@ describe('project directory encoding', () => {
   it('encodes a path the way ~/.claude/projects names its folders', () => {
     expect(encodeProjectDir('/home/u/projects/foo')).toBe('-home-u-projects-foo');
   });
-  it('decodes back to a path without the leading slash', () => {
-    expect(decodeProjectDir('-home-u-projects-foo')).toBe('home/u/projects/foo');
+  it('decodes back to a path', () => {
+    expect(decodeProjectDir('-home-u-projects-foo')).toBe('/home/u/projects/foo');
   });
   it('is lossy for directories containing a dash, which is why cwd is preferred', () => {
     // A folder named `my-app` encodes to `-home-u-my-app` and decodes to
-    // `home/u/my/app`. listClaudeProjects therefore groups by the cwd inside
+    // `/home/u/my/app`. listClaudeProjects therefore groups by the cwd inside
     // the JSONL, not by the folder name.
-    expect(decodeProjectDir(encodeProjectDir('/home/u/my-app'))).toBe('home/u/my/app');
+    expect(decodeProjectDir(encodeProjectDir('/home/u/my-app'))).toBe('/home/u/my/app');
   });
 });
 
@@ -96,7 +96,7 @@ describe('readSessionMeta', () => {
       projectID: '-home-u-projects-foo',
       gitBranch: 'main',
       title: 'first prompt',
-      jsonlPath: path,
+      transcriptPath: path,
     });
     expect(meta!.timeCreated).toBe(Date.parse('2026-01-01T00:00:00.000Z'));
     expect(meta!.timeUpdated).toBe(Date.parse('2026-01-02T00:00:00.000Z'));
@@ -133,13 +133,12 @@ describe('readSessionMeta', () => {
     expect(await readSessionMeta(join(dir, 'nope.jsonl'), '/hint', '-x')).toBeNull();
   });
 
-  it('uses the current time when the entries carry no usable timestamp', async () => {
+  it('uses the file\'s modification time when the entries carry no usable timestamp', async () => {
     const path = await writeJsonl('-x', 'session-a.jsonl', [userEntry({ timestamp: undefined })]);
-    const before = Date.now();
 
     const meta = await readSessionMeta(path, '/hint', '-x');
 
-    expect(meta!.timeCreated).toBeGreaterThanOrEqual(before);
+    expect(meta!.timeCreated).toBe((await stat(path)).mtimeMs);
   });
 });
 
@@ -268,7 +267,7 @@ describe('listClaudeSessions', () => {
     expect(all[0]).toMatchObject({
       directory: '/a',
       title: 'New Claude session',
-      jsonlPath: '',
+      transcriptPath: '',
       projectID: '-a',
     });
     expect(await listClaudeSessions('/other')).toEqual([]);
@@ -318,7 +317,7 @@ describe('findSessionMeta', () => {
     await addPendingSession('pending-1', '/a', 'New Claude session');
 
     expect((await findSessionMeta('session-a'))!.title).toBe('first prompt');
-    expect((await findSessionMeta('pending-1'))!.jsonlPath).toBe('');
+    expect((await findSessionMeta('pending-1'))!.transcriptPath).toBe('');
     expect(await findSessionMeta('cc_session-a')).toBeNull();
     expect(await findSessionMeta('nope')).toBeNull();
   });
