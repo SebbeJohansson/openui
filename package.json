@@ -12,50 +12,61 @@
   "repository": {
     "url": "https://github.com/SebbeJohansson/openui"
   },
-  "bin": "server.js",
+  "bin": "bin/openui.mjs",
   "files": [
-    "server.js",
-    "dist"
+    "bin",
+    ".output"
   ],
   "type": "module",
-  "packageManager": "yarn@4.17.0",
   "scripts": {
-    "prepack": "vite build",
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "prepack": "nuxt build",
+    "lint": "oxlint",
     "format": "oxfmt",
-    "lint": "oxlint && vue-tsc --noEmit",
-    "dev": "vite dev",
-    "dev:full": "npx tsx server-claude/index.ts",
-    "dev:full:prod": "NODE_ENV=production npx tsx server-claude/index.ts",
-    "dev:full:check": "tsc --noEmit --project server-claude/tsconfig.json",
-    "build": "vite build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format:check": "oxfmt --check",
+    "typecheck": "nuxt typecheck && tsc --noEmit -p test/browser/tsconfig.json",
+    "test": "vitest run",
+    "test:unit": "vitest run app shared server/utils",
+    "test:watch": "vitest app shared server/utils",
+    "check": "yarn lint && yarn format:check && yarn typecheck && yarn test",
+    "start": "node bin/openui.mjs",
+    "test:browser": "nuxt build && playwright test",
+    "test:browser:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@hono/node-server": "^1.19.9",
-    "hono": "^4.12.3"
+    "agent-conduit": "^0.2.0"
   },
   "devDependencies": {
-    "@iconify/vue": "^5.0.0",
+    "@iconify-json/lucide": "^1.2.129",
     "@kikuchan/hexdump": "0.1.0-alpha.9",
+    "@nuxt/icon": "^2.5.1",
+    "@nuxt/test-utils": "^4.2.0",
+    "@playwright/test": "^1.62.1",
     "@shikijs/markdown-it": "^3.22.0",
     "@shikijs/transformers": "^3.22.0",
-    "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^25.2.3",
-    "@vitejs/plugin-vue": "^6.0.4",
+    "@types/node": "^24.13.3",
+    "@vue/test-utils": "^2.5.0",
     "@xterm/xterm": "^6.0.0",
-    "autoprefixer": "^10.4.24",
+    "happy-dom": "^20.13.2",
     "markdown-it": "^14.1.1",
+    "nuxt": "^4.5.2",
     "oxfmt": "^0.32.0",
     "oxlint": "^1.47.0",
-    "oxlint-tsgolint": "^0.12.2",
-    "postcss": "^8.5.6",
     "shiki": "^3.22.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5",
-    "vite": "^7.3.1",
-    "vue": "^3.5.28",
+    "vitest": "^4.1.11",
+    "vue": "^3.5.42",
     "vue-tsc": "^3.2.4"
-  }
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "yarn@4.17.0"
 }

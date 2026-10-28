@@ -1,13 +1,19 @@
 import { ref, watch, effectScope } from 'vue';
 import { StorageKeys, storageGetJSON, storageKey, storageSetJSON } from '../utils/storageKeys';
 
-const hiddenModels = ref<string[]>(storageGetJSON<string[]>(StorageKeys.settings.hiddenModels) ?? []);
+const hiddenModels = ref<string[]>(
+  storageGetJSON<string[]>(StorageKeys.settings.hiddenModels) ?? [],
+);
 
 const scope = effectScope(true);
 scope.run(() => {
-  watch(hiddenModels, (value) => {
-    storageSetJSON(StorageKeys.settings.hiddenModels, value);
-  }, { deep: true });
+  watch(
+    hiddenModels,
+    (value) => {
+      storageSetJSON(StorageKeys.settings.hiddenModels, value);
+    },
+    { deep: true },
+  );
 });
 
 if (typeof window !== 'undefined') {

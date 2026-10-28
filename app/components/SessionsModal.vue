@@ -1,75 +1,92 @@
 <template>
   <Teleport to="body">
-    <div v-if="open" class="modal-backdrop" @click.self="$emit('close')" @keydown.escape="$emit('close')">
-    <div class="modal">
-      <header class="modal-header">
-        <div class="modal-title">
-          <Icon icon="lucide:git-branch" :width="14" :height="14" />
-          {{ branchLabel }} — All Sessions
-        </div>
-        <button type="button" class="modal-close-button" @click="$emit('close')">
-          <Icon icon="lucide:x" :width="14" :height="14" />
-        </button>
-      </header>
+    <div
+      v-if="open"
+      class="modal-backdrop"
+      @click.self="$emit('close')"
+      @keydown.escape="$emit('close')"
+    >
+      <div class="modal">
+        <header class="modal-header">
+          <div class="modal-title">
+            <Icon name="lucide:git-branch" :size="14" />
+            {{ branchLabel }} — All Sessions
+          </div>
+          <button type="button" class="modal-close-button" @click="$emit('close')">
+            <Icon name="lucide:x" :size="14" />
+          </button>
+        </header>
 
-      <div class="modal-search">
-        <Icon icon="lucide:search" class="search-icon" />
-        <input
-          ref="searchInputRef"
-          v-model="filterQuery"
-          type="text"
-          class="search-input"
-          placeholder="Filter sessions..."
-        />
-        <button v-if="filterQuery" type="button" class="clear-search" @click="filterQuery = ''">
-          <Icon icon="lucide:x" :width="12" :height="12" />
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <div v-if="filteredSessions.length === 0" class="empty-state">
-          {{ filterQuery ? 'No matching sessions' : 'No sessions' }}
+        <div class="modal-search">
+          <Icon name="lucide:search" class="search-icon" />
+          <input
+            ref="searchInputRef"
+            v-model="filterQuery"
+            type="text"
+            class="search-input"
+            placeholder="Filter sessions..."
+          />
+          <button v-if="filterQuery" type="button" class="clear-search" @click="filterQuery = ''">
+            <Icon name="lucide:x" :size="12" />
+          </button>
         </div>
-        <div
-          v-for="session in filteredSessions"
-          :key="session.id"
-          class="session-row"
-          :class="{ 'is-active': session.id === selectedSessionId }"
-          @click="selectSession(session)"
-        >
-          <div class="session-main">
-            <span class="session-status-icon" :title="session.status">{{
-              sessionStatusIcon(session.status)
-            }}</span>
-            <div class="session-info">
-              <div class="session-info-top">
-                <span class="session-title">{{
-                  session.title || session.slug || session.id
-                }}</span>
-                <span v-if="claudeEnabled && session.source === 'claude'" class="session-badge-claude">Claude</span>
-                <span v-else-if="claudeEnabled && session.source !== 'claude'" class="session-badge-opencode">OpenCode</span>
-                <span v-if="session.archivedAt" class="session-badge-archived">archived</span>
+
+        <div class="modal-body">
+          <div v-if="filteredSessions.length === 0" class="empty-state">
+            {{ filterQuery ? 'No matching sessions' : 'No sessions' }}
+          </div>
+          <div
+            v-for="session in filteredSessions"
+            :key="session.id"
+            class="session-row"
+            :class="{ 'is-active': session.id === selectedSessionId }"
+            @click="selectSession(session)"
+          >
+            <div class="session-main">
+              <span class="session-status-icon" :title="session.status">{{
+                sessionStatusIcon(session.status)
+              }}</span>
+              <div class="session-info">
+                <div class="session-info-top">
+                  <span class="session-title">{{
+                    session.title || session.slug || session.id
+                  }}</span>
+                  <span
+                    v-if="claudeEnabled && session.source === 'claude'"
+                    class="session-badge-claude"
+                    >Claude</span
+                  >
+                  <span
+                    v-else-if="claudeEnabled && session.source !== 'claude'"
+                    class="session-badge-opencode"
+                    >OpenCode</span
+                  >
+                  <span v-if="session.archivedAt" class="session-badge-archived">archived</span>
+                </div>
+                <span v-if="session.timeCreated || session.timeUpdated" class="session-time">
+                  {{ formatSessionMetaTime(session) }}
+                </span>
               </div>
-              <span v-if="session.timeCreated || session.timeUpdated" class="session-time">
-                {{ formatSessionMetaTime(session) }}
-              </span>
             </div>
           </div>
         </div>
-      </div>
 
-      <footer class="modal-footer">
-        <span class="session-count">{{ filteredSessions.length }} session{{ filteredSessions.length === 1 ? '' : 's' }}</span>
-      </footer>
-    </div>
+        <footer class="modal-footer">
+          <span class="session-count"
+            >{{ filteredSessions.length }} session{{
+              filteredSessions.length === 1 ? '' : 's'
+            }}</span
+          >
+        </footer>
+      </div>
     </div>
   </Teleport>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue';
-import { Icon } from '@iconify/vue';
-import { claudeEnabled } from '../composables/useCredentials';
+import { useServerConfig } from '../composables/useServerConfig';
+import { sessionStatusIcon } from '../utils/session';
 
 type Session = {
   id: string;
@@ -95,7 +112,7 @@ const emit = defineEmits<{
   (event: 'select', sessionId: string): void;
 }>();
 
-const dialogRef = ref<HTMLElement | null>(null);
+const { claudeEnabled } = useServerConfig();
 const searchInputRef = ref<HTMLInputElement | null>(null);
 const filterQuery = ref('');
 
@@ -129,13 +146,6 @@ const filteredSessions = computed(() => {
 function selectSession(session: Session) {
   emit('select', session.id);
   emit('close');
-}
-
-function sessionStatusIcon(status: Session['status']) {
-  if (status === 'busy') return '\u{1F914}';
-  if (status === 'retry') return '\u{1F534}';
-  if (status === 'idle') return '\u{1F7E2}';
-  return '\u26AA';
 }
 
 function formatSessionTime(timestamp: number) {

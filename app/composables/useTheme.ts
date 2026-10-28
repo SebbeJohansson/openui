@@ -1,5 +1,12 @@
 import { ref, watch, effectScope } from 'vue';
-import { StorageKeys, storageGet, storageKey, storageSet, storageGetJSON, storageSetJSON } from '../utils/storageKeys';
+import {
+  StorageKeys,
+  storageGet,
+  storageKey,
+  storageSet,
+  storageGetJSON,
+  storageSetJSON,
+} from '../utils/storageKeys';
 import {
   DEFAULT_THEME_ID,
   THEMES,
@@ -7,11 +14,7 @@ import {
   listThemes,
   type ThemeDefinition,
 } from '../utils/themes';
-import {
-  DEFAULT_SEED,
-  generatePalette,
-  type SimpleThemeSeed,
-} from '../utils/themeGenerator';
+import { DEFAULT_SEED, generatePalette, type SimpleThemeSeed } from '../utils/themeGenerator';
 
 const CUSTOM_ID = 'custom';
 
@@ -78,12 +81,16 @@ scope.run(() => {
     applyCurrentTheme();
   });
 
-  watch(customSeeds, () => {
-    storageSetJSON(StorageKeys.settings.customThemeSeeds, customSeeds.value);
-    if (themeId.value === CUSTOM_ID) {
-      applySeeds(customSeeds.value);
-    }
-  }, { deep: true });
+  watch(
+    customSeeds,
+    () => {
+      storageSetJSON(StorageKeys.settings.customThemeSeeds, customSeeds.value);
+      if (themeId.value === CUSTOM_ID) {
+        applySeeds(customSeeds.value);
+      }
+    },
+    { deep: true },
+  );
 });
 
 // Cross-tab sync
@@ -97,7 +104,9 @@ if (typeof window !== 'undefined') {
       try {
         const parsed = JSON.parse(event.newValue ?? '');
         if (parsed) customSeeds.value = parsed;
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
     }
   });
 }

@@ -328,5 +328,3 @@ export function useOpenCodeApi(projects: ProjectsMap | Ref<ProjectsMap>) {
     openProject,
   };
 }
-
-export type UseOpenCodeApi = ReturnType<typeof useOpenCodeApi>;

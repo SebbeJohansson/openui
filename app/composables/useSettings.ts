@@ -7,7 +7,9 @@ const fullScreenFloating = ref(storageGet(StorageKeys.settings.fullScreenFloatin
 const requireGitDirectory = ref(storageGet(StorageKeys.settings.requireGitDirectory) !== 'false');
 const peonPingEnabled = ref(storageGet(StorageKeys.settings.peonPingEnabled) === 'true');
 const peonPingUrl = ref(storageGet(StorageKeys.settings.peonPingUrl) ?? '');
-const rememberModelPerAgent = ref(storageGet(StorageKeys.settings.rememberModelPerAgent) !== 'false');
+const rememberModelPerAgent = ref(
+  storageGet(StorageKeys.settings.rememberModelPerAgent) !== 'false',
+);
 
 // Run watchers in a detached effectScope so they are not tied to any component
 // lifecycle and reliably persist setting changes to localStorage.
@@ -69,5 +71,13 @@ if (typeof window !== 'undefined') {
 }
 
 export function useSettings() {
-  return { enterToSend, suppressAutoWindows, fullScreenFloating, requireGitDirectory, peonPingEnabled, peonPingUrl, rememberModelPerAgent };
+  return {
+    enterToSend,
+    suppressAutoWindows,
+    fullScreenFloating,
+    requireGitDirectory,
+    peonPingEnabled,
+    peonPingUrl,
+    rememberModelPerAgent,
+  };
 }

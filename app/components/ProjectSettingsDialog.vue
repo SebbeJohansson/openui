@@ -10,7 +10,7 @@
       <header class="modal-header">
         <div class="modal-title">Project Settings</div>
         <button type="button" class="modal-close-button" @click="dialogRef?.close()">
-          <Icon icon="lucide:x" :width="14" :height="14" />
+          <Icon name="lucide:x" :size="14" />
         </button>
       </header>
       <form class="modal-body" @submit.prevent="handleSubmit">
@@ -29,7 +29,7 @@
               "
               @click="form.name = packageJsonName!"
             >
-              <Icon icon="lucide:refresh-cw" :width="14" :height="14" />
+              <Icon name="lucide:refresh-cw" :size="14" />
             </button>
           </div>
         </div>
@@ -48,10 +48,10 @@
               <img v-if="form.iconUrl" :src="form.iconUrl" alt="icon" class="icon-image" />
               <span v-else class="icon-letter" :style="avatarStyle">{{ avatarLetter }}</span>
               <div v-if="form.iconUrl" class="icon-overlay delete">
-                <Icon icon="lucide:trash-2" :width="20" :height="20" />
+                <Icon name="lucide:trash-2" :size="20" />
               </div>
               <div v-else class="icon-overlay upload">
-                <Icon icon="lucide:upload" :width="20" :height="20" />
+                <Icon name="lucide:upload" :size="20" />
               </div>
             </div>
             <input
@@ -110,7 +110,6 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from 'vue';
-import { Icon } from '@iconify/vue';
 import * as opencodeApi from '../utils/opencode';
 
 const COLOR_KEYS = ['pink', 'mint', 'orange', 'purple', 'cyan', 'lime'] as const;

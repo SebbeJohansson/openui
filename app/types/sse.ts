@@ -281,7 +281,7 @@ export type AssistantMessageInfo = {
   parentID: string;
   modelID: string;
   providerID: string;
-  /** @deprecated */
+  /** @deprecated Superseded by `agent`; OpenCode still sends it on the wire. */
   mode: string;
   agent: string;
   path: { cwd: string; root: string };
@@ -539,10 +539,6 @@ type SsePacketByType<K extends keyof GlobalEventMap> = {
     properties: GlobalEventMap[K];
   };
 };
-
-export type KnownSsePacket = {
-  [K in keyof GlobalEventMap]: SsePacketByType<K>;
-}[keyof GlobalEventMap];
 
 export type WorkerStateEventMap = Pick<
   GlobalEventMap,

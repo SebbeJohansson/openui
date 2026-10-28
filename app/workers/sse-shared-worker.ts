@@ -20,6 +20,9 @@ import {
 } from '../utils/opencode';
 import { createSseConnection, type SseConnection } from '../utils/sseConnection';
 import { createStateBuilder } from '../utils/stateBuilder';
+import { normalizeDirectory } from '../utils/path';
+import { isPermissionRule } from '../utils/permissions';
+import { asObjectArray, asRecord, asString, asStringArray } from '../utils/strings';
 
 type SharedWorkerSelf = {
   onconnect: ((event: MessageEvent) => void) | null;
@@ -58,31 +61,6 @@ function broadcast(state: ConnectionState, message: WorkerToTabMessage) {
   }
 }
 
-function toForwardSlashes(path: string): string {
-  return path.replace(/\\/g, '/');
-}
-
-function normalizeDirectory(value: string) {
-  const trimmed = toForwardSlashes(value.trim());
-  if (!trimmed) return '';
-  const normalized = trimmed.replace(/\/+$/, '');
-  return normalized || '/';
-}
-
-function asRecord(value: unknown): Record<string, unknown> | null {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-  return value as Record<string, unknown>;
-}
-
-function asString(value: unknown): string | undefined {
-  return typeof value === 'string' ? value : undefined;
-}
-
-function asObjectArray<T>(value: unknown): T[] {
-  if (!Array.isArray(value)) return [];
-  return value as T[];
-}
-
 function asStatusMap(value: unknown): Record<string, { type?: string }> {
   const record = asRecord(value);
   if (!record) return {};
@@ -97,16 +75,6 @@ function asBoolean(value: unknown): boolean | undefined {
   return typeof value === 'boolean' ? value : undefined;
 }
 
-function asStringArray(value: unknown): string[] | null {
-  if (!Array.isArray(value)) return null;
-  const values: string[] = [];
-  for (const item of value) {
-    if (typeof item !== 'string') return null;
-    values.push(item);
-  }
-  return values;
-}
-
 function asStringMatrix(value: unknown): string[][] | null {
   if (!Array.isArray(value)) return null;
   const rows: string[][] = [];
@@ -116,17 +84,6 @@ function asStringMatrix(value: unknown): string[][] | null {
     rows.push(parsed);
   }
   return rows;
-}
-
-function isPermissionRule(value: unknown): boolean {
-  const record = asRecord(value);
-  if (!record) return false;
-  const action = asString(record.action);
-  return (
-    Boolean(asString(record.permission)) &&
-    Boolean(asString(record.pattern)) &&
-    (action === 'allow' || action === 'deny' || action === 'ask')
-  );
 }
 
 function isFileDiff(value: unknown): boolean {

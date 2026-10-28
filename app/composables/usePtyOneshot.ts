@@ -1,26 +1,15 @@
 import type { Ref } from 'vue';
 import * as opencodeApi from '../utils/opencode';
+import { parsePtyInfo } from '../utils/pty';
 
 type UsePtyOneshotOptions = {
   activeDirectory: Ref<string>;
-};
-
-type PtyInfo = {
-  id: string;
 };
 
 const PTY_ONESHOT_TIMEOUT_MS = 30000;
 const PTY_ONESHOT_EXIT_PREFIX = '__OPENCODE_PTY_EXIT_CODE__:';
 
 let boundOptions: UsePtyOneshotOptions | null = null;
-
-function parsePtyInfo(value: unknown): PtyInfo | null {
-  if (!value || typeof value !== 'object') return null;
-  const record = value as Record<string, unknown>;
-  const id = typeof record.id === 'string' ? record.id : '';
-  if (!id) return null;
-  return { id };
-}
 
 function getOptions() {
   if (!boundOptions) {

@@ -1,3 +1,20 @@
+/** Convert Windows separators to `/`. */
+export function toForwardSlashes(path: string): string {
+  return path.replace(/\\/g, '/');
+}
+
+/**
+ * Canonical form for a directory key: forward slashes, trimmed, no trailing
+ * slash. Empty input yields `''`; a bare root yields `'/'`.
+ */
+export function normalizeDirectory(value?: string): string {
+  if (!value) return '';
+  const trimmed = toForwardSlashes(value).trim();
+  if (!trimmed) return '';
+  const normalized = trimmed.replace(/\/+$/, '');
+  return normalized || '/';
+}
+
 /**
  * Normalize a relative path by stripping `.`, `..`, and empty segments.
  * Parent traversals (`..`) are silently dropped.

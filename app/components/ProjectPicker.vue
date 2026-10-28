@@ -23,7 +23,7 @@
           <header class="modal-header">
             <span class="modal-title">Open project</span>
             <button type="button" class="modal-close-button" @click="handleClose">
-              <Icon icon="lucide:x" :width="14" :height="14" />
+              <Icon name="lucide:x" :size="14" />
             </button>
           </header>
           <div class="path-row">
@@ -45,11 +45,7 @@
 
         <DropdownItem v-if="showCurrentEntry" value=".">./</DropdownItem>
         <DropdownItem v-if="showParentEntry" value="..">../</DropdownItem>
-        <DropdownItem
-          v-for="item in suggestions"
-          :key="item.name"
-          :value="item.name"
-        >
+        <DropdownItem v-for="item in suggestions" :key="item.name" :value="item.name">
           {{ item.name }}/
         </DropdownItem>
         <div v-if="!isLoading && suggestions.length === 0 && currentDir" class="picker-empty">
@@ -62,7 +58,6 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
-import { Icon } from '@iconify/vue';
 import Dropdown from './Dropdown.vue';
 import DropdownItem from './Dropdown/Item.vue';
 import * as opencodeApi from '../utils/opencode';
@@ -161,9 +156,7 @@ const showParentEntry = computed(() => {
   return '..'.startsWith(filter.toLowerCase());
 });
 
-const hasDirectoryEntries = computed(() =>
-  allEntries.value.some((n) => n.type === 'directory'),
-);
+const hasDirectoryEntries = computed(() => allEntries.value.some((n) => n.type === 'directory'));
 
 const canOpen = computed(() => Boolean(resolveOpenDirectory()));
 
@@ -206,9 +199,7 @@ function initPicker() {
   rawInput.value = '';
 
   const worktree = props.worktreePath?.trim().replace(/\\/g, '/');
-  const initial = worktree
-    ? ensureTrailingSlash(worktree)
-    : homePrefix.value || '/';
+  const initial = worktree ? ensureTrailingSlash(worktree) : homePrefix.value || '/';
   rawInput.value = collapseTilde(initial);
   const dir = currentDir.value;
   if (dir) void fetchDirectory(dir);

@@ -15,6 +15,9 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+env:
+  NUXT_TELEMETRY_DISABLED: 1
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,19 +25,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
-
-      - name: Enable Corepack
-        run: corepack enable
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Build
-        run: yarn build
+      - name: Generate static site
+        run: yarn generate
+        env:
+          NUXT_APP_BASE_URL: /openui/
 
       - name: Configure Pages
         uses: actions/configure-pages@v4
@@ -42,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: .output/public
 
   deploy:
     needs: build

@@ -3,6 +3,7 @@ import type { ComputedRef, Ref } from 'vue';
 import QuestionContent from '../components/ToolWindow/Question.vue';
 import * as opencodeApi from '../utils/opencode';
 import type { useFloatingWindows } from './useFloatingWindows';
+import { toErrorMessage } from '../utils/strings';
 
 export type QuestionOption = {
   label: string;
@@ -301,11 +302,6 @@ export function useQuestions(options: {
     isQuestionSessionAllowed,
     fetchPendingQuestions,
   };
-}
-
-function toErrorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message;
-  return String(error);
 }
 
 function log(..._args: unknown[]): void {}

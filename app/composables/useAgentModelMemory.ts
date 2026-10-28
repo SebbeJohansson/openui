@@ -10,9 +10,13 @@ const memory = ref<AgentModelMap>(
 
 const scope = effectScope(true);
 scope.run(() => {
-  watch(memory, (value) => {
-    storageSetJSON(StorageKeys.state.agentModelMemory, value);
-  }, { deep: true });
+  watch(
+    memory,
+    (value) => {
+      storageSetJSON(StorageKeys.state.agentModelMemory, value);
+    },
+    { deep: true },
+  );
 });
 
 function remember(agent: string, model: string, variant?: string) {

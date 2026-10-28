@@ -275,7 +275,8 @@ function buildAnswers() {
     // In single mode, a selected prefilled option takes precedence — exclude
     // the custom text so only the selected option is submitted.
     const excludeCustom = !isMultiple && selected.length > 0;
-    const custom = excludeCustom || item.custom === false ? '' : (customAnswers.value[index] ?? '').trim();
+    const custom =
+      excludeCustom || item.custom === false ? '' : (customAnswers.value[index] ?? '').trim();
     const values = custom ? [...selected, custom] : [...selected];
     return Array.from(new Set(values));
   });

@@ -9,6 +9,9 @@ permissions:
   contents: read
   id-token: write
 
+env:
+  NUXT_TELEMETRY_DISABLED: 1
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -16,17 +19,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: yarn
           registry-url: https://registry.npmjs.org
-
-      - name: Enable Corepack
-        run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
+
+      - name: Check
+        run: yarn check
+
+      - name: Verify package contents
+        run: |
+          yarn build
+          npm pack --dry-run 2>&1 | tee pack.log
+          grep -q 'bin/openui.mjs' pack.log
+          grep -q '.output/server/index.mjs' pack.log
 
       - name: Publish
         run: npm publish --access public --tag latest

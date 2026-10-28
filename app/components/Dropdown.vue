@@ -29,12 +29,7 @@
             </div>
           </div>
         </slot>
-        <Icon
-          class="ui-dropdown-icon"
-          :icon="props.menuIcon ?? 'lucide:chevron-down'"
-          :width="12"
-          :height="12"
-        />
+        <Icon class="ui-dropdown-icon" :name="props.menuIcon ?? 'lucide:chevron-down'" :size="12" />
       </button>
     </slot>
     <div
@@ -66,7 +61,6 @@ import {
   watch,
   type StyleValue,
 } from 'vue';
-import { Icon } from '@iconify/vue';
 
 export interface DropdownAPI {
   select: (item: unknown) => void;
@@ -84,9 +78,9 @@ const props = withDefaults(
     modelValue?: T;
     label?: string;
     placeholder?: string;
-    buttonClass?: unknown;
+    buttonClass?: string | Record<string, boolean> | Array<string | Record<string, boolean>>;
     buttonStyle?: StyleValue;
-    popupClass?: unknown;
+    popupClass?: string | Record<string, boolean> | Array<string | Record<string, boolean>>;
     popupStyle?: StyleValue;
     autoClose?: boolean;
     disabled?: boolean;

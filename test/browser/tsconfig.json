@@ -1,0 +1,18 @@
+{
+  "//": "The Nuxt tsconfigs cover app/, server/, shared/ and test/nuxt/ only, so the Playwright harness needs its own project to be typechecked. Wired into `yarn typecheck`.",
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["**/*.ts", "../../playwright.config.ts"]
+}

@@ -57,7 +57,7 @@
           aria-label="Scroll to latest"
           @click="$emit('resume-follow')"
         >
-          <Icon icon="lucide:arrow-down" :width="14" :height="14" />
+          <Icon name="lucide:arrow-down" :size="14" />
         </button>
       </div>
 
@@ -72,7 +72,6 @@
 </template>
 
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import FileRefPopup from './FileRefPopup.vue';
 import StatusBar from './StatusBar.vue';
@@ -174,8 +173,7 @@ function getFinalAnswer(root: MessageInfo): MessageInfo | undefined {
 }
 
 function hasAssistantMessages(root: MessageInfo): boolean {
-  const thread = msg.getThread(root.id);
-  return thread.some((item) => item.role === 'assistant' && msg.hasTextContent(item.id));
+  return msg.hasAssistantMessages(root.id);
 }
 
 function getFinalAnswerContent(root: MessageInfo): string {

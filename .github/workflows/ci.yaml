@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  NUXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Lint, format, typecheck, test
+        run: yarn check
+
+      - name: Build server
+        run: yarn build
+
+      - name: Generate static site
+        run: yarn generate
+        env:
+          NUXT_APP_BASE_URL: /openui/
+
+      - name: Verify static output
+        run: test -f .output/public/404.html && test -f .output/public/.nojekyll

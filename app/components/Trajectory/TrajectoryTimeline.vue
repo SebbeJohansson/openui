@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { TrajectoryEvent, TrajectoryLane } from '../../composables/useTrajectory';
-import type { TrajectoryMetric } from './metrics';
+import type { TrajectoryMetric } from '../../utils/trajectoryMetrics';
 
 const props = defineProps<{
   events: TrajectoryEvent[];

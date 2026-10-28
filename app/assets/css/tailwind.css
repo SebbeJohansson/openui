@@ -1,0 +1,141 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+@source "../../**/*.{vue,ts}";
+
+/* ──────────────────────────────────────────────────────────────
+   Theme variables (semantic tokens)
+   The default values below match the dark theme.
+   Themes are applied at runtime by setting `data-theme` on
+   <html> via the useTheme() composable, which writes these
+   custom properties on :root.
+   ────────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --theme-bg-base: #0f172a;
+  --theme-bg-elevated: #0b1320;
+  --theme-bg-surface: #111a2c;
+  --theme-bg-overlay: rgba(15, 23, 42, 0.92);
+  --theme-bg-hover: #1d2a45;
+  --theme-bg-selected: rgba(59, 130, 246, 0.2);
+
+  /* Text */
+  --theme-text-primary: #f1f5f9;
+  --theme-text-secondary: #e2e8f0;
+  --theme-text-muted: #94a3b8;
+  --theme-text-subtle: #64748b;
+  --theme-text-inverse: #ffffff;
+
+  /* Borders */
+  --theme-border: #334155;
+  --theme-border-subtle: rgba(71, 85, 105, 0.5);
+  --theme-border-strong: #475569;
+
+  /* Accents */
+  --theme-accent: #60a5fa;
+  --theme-accent-strong: #3b82f6;
+  --theme-accent-soft: rgba(59, 130, 246, 0.45);
+  --theme-success: #86efac;
+  --theme-warning: #fbbf24;
+  --theme-danger: #fca5a5;
+  --theme-danger-strong: #ef4444;
+  --theme-info: #93c5fd;
+  --theme-special: #c4b5fd;
+
+  /* Git status colors (VS Code-style, intentionally stable across themes) */
+  --theme-git-added: #73c991;
+  --theme-git-modified: #e2c08d;
+  --theme-git-deleted: #e06050;
+  --theme-git-renamed: #4ec9b0;
+  --theme-git-staged-modified: #f0d6a0;
+  --theme-git-staged-renamed: #5ee0c8;
+
+  /* Diff/code */
+  --theme-diff-add-bg: rgba(46, 160, 67, 0.22);
+  --theme-diff-add-text: #aff5b4;
+  --theme-diff-add-border: rgba(46, 160, 67, 0.55);
+  --theme-diff-del-bg: rgba(248, 81, 73, 0.2);
+  --theme-diff-del-text: #ffdcd7;
+  --theme-diff-del-border: rgba(248, 81, 73, 0.55);
+  --theme-diff-hunk-bg: rgba(56, 139, 253, 0.18);
+  --theme-diff-hunk-border: rgba(56, 139, 253, 0.55);
+  --theme-diff-header-bg: rgba(110, 118, 129, 0.18);
+  --theme-diff-header-border: rgba(110, 118, 129, 0.55);
+
+  /* Light-tinted success/info for readable text on dark backgrounds */
+  --theme-success-text: #d1fae5;
+  --theme-info-text: #dbeafe;
+
+  /* Scrollbar */
+  --theme-scrollbar-thumb: rgba(255, 255, 255, 0.15);
+
+  /* Search highlights */
+  --theme-highlight-bg: rgba(234, 179, 8, 0.35);
+  --theme-highlight-fg: #fef08a;
+  --theme-highlight-current-bg: rgba(59, 130, 246, 0.58);
+  --theme-highlight-current-fg: #ffffff;
+}
+
+@theme {
+  --font-sans:
+    'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  --color-surface-900: #0f172a;
+  --color-surface-800: #1e293b;
+  --color-surface-700: #334155;
+  --color-text-100: #e2e8f0;
+  --color-text-300: #94a3b8;
+  --color-accent-400: #60a5fa;
+  --color-success-400: #22c55e;
+  --color-warning-300: #fef08a;
+}
+
+/* ── Unified scrollbar ── */
+*,
+*::before,
+*::after {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: var(--theme-scrollbar-thumb) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: var(--theme-scrollbar-thumb);
+}
+
+::highlight(fw-search) {
+  background: var(--theme-highlight-bg);
+  color: var(--theme-highlight-fg);
+}
+
+::highlight(fw-search-current) {
+  background: var(--theme-highlight-current-bg);
+  color: var(--theme-highlight-current-fg);
+}
+
+/* Root sizing; the background is set before first paint by the anti-FOUC head script. */
+html,
+body,
+#__nuxt {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--theme-bg-surface, #111a2c);
+}

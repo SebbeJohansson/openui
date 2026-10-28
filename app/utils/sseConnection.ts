@@ -1,13 +1,10 @@
+import { parseSsePacket, splitSseBlocks } from 'agent-conduit';
 import type { SsePacket } from '../types/sse';
+import { normalizeBaseUrl } from './url';
 
 export type SseConnectionOptions = {
   baseUrl: string;
   authorization?: string;
-};
-
-export type SseConnectionConnectOptions = {
-  failFast?: boolean;
-  timeoutMs?: number;
 };
 
 export type SseConnectionCallbacks = {
@@ -22,31 +19,7 @@ export type SseConnection = {
   isConnected: () => boolean;
 };
 
-function normalizeBaseUrl(baseUrl: string) {
-  return baseUrl.replace(/\/+$/, '');
-}
-
-function parsePacket(raw: string): SsePacket | null {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    return null;
-  }
-  if (!parsed || typeof parsed !== 'object') return null;
-  const record = parsed as Record<string, unknown>;
-  if (!record.payload || typeof record.payload !== 'object') return null;
-  const payload = record.payload as Record<string, unknown>;
-  if (typeof payload.type !== 'string') return null;
-  if (!payload.properties || typeof payload.properties !== 'object') return null;
-  return {
-    directory: typeof record.directory === 'string' ? record.directory : '',
-    payload: {
-      type: payload.type,
-      properties: payload.properties as Record<string, unknown>,
-    },
-  };
-}
+export { parseSsePacket, splitSseBlocks } from 'agent-conduit';
 
 export function createSseConnection(callbacks: SseConnectionCallbacks): SseConnection {
   let abortController: AbortController | undefined;
@@ -85,8 +58,9 @@ export function createSseConnection(callbacks: SseConnectionCallbacks): SseConne
           const { done, value } = await reader.read();
           if (done) break;
           buffer += decoder.decode(value, { stream: true });
-          const blocks = buffer.split('\n\n');
-          buffer = blocks.pop() || '';
+          const split = splitSseBlocks(buffer);
+          const blocks = split.blocks;
+          buffer = split.rest;
 
           for (const block of blocks) {
             if (!block.trim()) continue;
@@ -95,7 +69,7 @@ export function createSseConnection(callbacks: SseConnectionCallbacks): SseConne
               console.warn('Invalid SSE packet?', block);
               continue;
             }
-            const packet = parsePacket(block.slice(prefix.length));
+            const packet = parseSsePacket(block.slice(prefix.length));
             if (packet) callbacks.onPacket(packet);
           }
         }

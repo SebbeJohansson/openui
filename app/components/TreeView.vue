@@ -16,14 +16,9 @@
               :title="branchTitle"
               @click.stop="onBranchPickerToggle"
             >
-              <Icon :icon="branchIcon" :width="13" :height="13" class="tree-branch-icon" />
+              <Icon :name="branchIcon" :size="13" class="tree-branch-icon" />
               <span class="tree-branch-name">{{ branchName }}</span>
-              <Icon
-                icon="lucide:chevron-down"
-                :width="11"
-                :height="11"
-                class="tree-branch-chevron"
-              />
+              <Icon name="lucide:chevron-down" :size="11" class="tree-branch-chevron" />
             </button>
           </template>
           <DropdownSearch v-model="branchSearchQuery" placeholder="Search branches" />
@@ -41,9 +36,8 @@
                 <div class="tree-branch-menu-line1">
                   <Icon
                     v-if="entry.isCurrent"
-                    icon="lucide:check"
-                    :width="12"
-                    :height="12"
+                    name="lucide:check"
+                    :size="12"
                     class="tree-branch-current-icon"
                   />
                   <span v-else class="tree-branch-current-spacer"></span>
@@ -65,7 +59,7 @@
                     title="Merge this ref into current branch"
                     @click.stop="onBranchMerge(entry)"
                   >
-                    <Icon icon="lucide:git-merge" :width="14" :height="14" />
+                    <Icon name="lucide:git-merge" :size="14" />
                   </button>
                   <span v-else class="tree-branch-action-spacer"></span>
                   <button
@@ -74,7 +68,7 @@
                     title="Create branch from this ref"
                     @click.stop="onBranchFork(entry)"
                   >
-                    <Icon icon="lucide:git-branch-plus" :width="14" :height="14" />
+                    <Icon name="lucide:git-branch-plus" :size="14" />
                   </button>
                   <button
                     v-if="canDeleteLocalBranch(entry)"
@@ -83,7 +77,7 @@
                     title="Delete local branch"
                     @click.stop="onBranchDelete(entry)"
                   >
-                    <Icon icon="lucide:trash-2" :width="14" :height="14" />
+                    <Icon name="lucide:trash-2" :size="14" />
                   </button>
                   <span v-else class="tree-branch-action-spacer"></span>
                 </div>
@@ -99,7 +93,7 @@
                     :title="`git fetch ${group.key}`"
                     @click.stop="onRemoteFetch(group.key)"
                   >
-                    <Icon icon="lucide:refresh-cw" :width="12" :height="12" />
+                    <Icon name="lucide:refresh-cw" :size="12" />
                   </button>
                 </template>
               </DropdownLabel>
@@ -131,7 +125,7 @@
                       title="Merge this ref into current branch"
                       @click.stop="onBranchMerge(entry)"
                     >
-                      <Icon icon="lucide:git-merge" :width="14" :height="14" />
+                      <Icon name="lucide:git-merge" :size="14" />
                     </button>
                     <span v-else class="tree-branch-action-spacer"></span>
                     <button
@@ -140,7 +134,7 @@
                       title="Create branch from this ref"
                       @click.stop="onBranchFork(entry)"
                     >
-                      <Icon icon="lucide:git-branch-plus" :width="14" :height="14" />
+                      <Icon name="lucide:git-branch-plus" :size="14" />
                     </button>
                     <span class="tree-branch-action-spacer"></span>
                   </div>
@@ -166,9 +160,7 @@
               @click.stop="pushMenuOpen = !pushMenuOpen"
             >
               <span class="tree-branch-ahead">
-                <Icon icon="lucide:arrow-up" :width="11" :height="11" title="" />{{
-                  branchInfo.ahead
-                }}
+                <Icon name="lucide:arrow-up" :size="11" title="" />{{ branchInfo.ahead }}
               </span>
             </button>
           </template>
@@ -190,9 +182,7 @@
               @click.stop="pullMenuOpen = !pullMenuOpen"
             >
               <span class="tree-branch-behind">
-                <Icon icon="lucide:arrow-down" :width="11" :height="11" title="" />{{
-                  branchInfo.behind
-                }}
+                <Icon name="lucide:arrow-down" :size="11" title="" />{{ branchInfo.behind }}
               </span>
             </button>
           </template>
@@ -207,7 +197,7 @@
             :value="`git merge ${shellQuote(branchInfo.upstream)}`"
             class="tree-branch-cmd-merge"
           >
-            <Icon icon="lucide:git-merge" :width="12" :height="12" />
+            <Icon name="lucide:git-merge" :size="12" />
             git merge &lt;upstream&gt;
           </DropdownItem>
           <DropdownItem
@@ -306,9 +296,8 @@
           @click.stop="emit('toggle-dir', row.node.path)"
         >
           <Icon
-            :icon="isExpanded(row.node.path) ? 'lucide:chevron-down' : 'lucide:chevron-right'"
-            :width="14"
-            :height="14"
+            :name="isExpanded(row.node.path) ? 'lucide:chevron-down' : 'lucide:chevron-right'"
+            :size="14"
           />
         </button>
         <span v-else class="tree-toggle tree-toggle-spacer"></span>
@@ -337,7 +326,7 @@
           aria-label="Reload file tree"
           @click="emit('reload')"
         >
-          <Icon icon="lucide:refresh-cw" :width="13" :height="13" />
+          <Icon name="lucide:refresh-cw" :size="13" />
         </button>
       </div>
     </div>
@@ -346,7 +335,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Icon } from '@iconify/vue';
 import type { BranchEntry } from '../composables/useFileTree';
 import Dropdown from './Dropdown.vue';
 import DropdownItem from './Dropdown/Item.vue';
@@ -434,13 +422,6 @@ const pullMenuOpen = ref(false);
 const expanded = computed(() => new Set(props.expandedPaths));
 const branchIcon = computed(() => (props.branchInfo ? 'lucide:git-branch' : 'lucide:folder'));
 const branchName = computed(() => props.branchInfo?.branch ?? props.directoryName ?? 'no git');
-const upstreamRemote = computed(() => {
-  const upstream = props.branchInfo?.upstream;
-  if (!upstream) return 'origin';
-  const slashIdx = upstream.indexOf('/');
-  return slashIdx > 0 ? upstream.slice(0, slashIdx) : 'origin';
-});
-
 const branchTitle = computed(() => {
   const info = props.branchInfo;
   if (!info) {

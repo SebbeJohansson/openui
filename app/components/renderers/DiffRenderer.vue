@@ -22,8 +22,8 @@
 <script setup lang="ts">
 import { computed, ref, watch, nextTick } from 'vue';
 import CodeContent from '../CodeContent.vue';
-import { type CodeRenderParams, useCodeRender } from '../../utils/useCodeRender';
-import { guessLanguageFromPath } from '../ToolWindow/utils';
+import { type CodeRenderParams, useCodeRender } from '../../composables/useCodeRender';
+import { guessLanguageFromPath } from '../../utils/toolWindowFormat';
 
 const props = defineProps<{
   path?: string;

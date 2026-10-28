@@ -8,7 +8,7 @@
       aria-label="Expand side panel"
       @click="emit('toggle-collapse')"
     >
-      <Icon icon="lucide:chevron-right" width="14" height="14" />
+      <Icon name="lucide:chevron-right" size="14" />
     </button>
     <div v-else class="side-body">
       <div class="side-tabs">
@@ -29,7 +29,7 @@
           aria-label="Collapse side panel"
           @click="emit('toggle-collapse')"
         >
-          <Icon icon="lucide:chevron-left" width="14" height="14" />
+          <Icon name="lucide:chevron-left" size="14" />
         </button>
       </div>
       <TodoList v-if="activeTab === 'todo'" :sessions="todoSessions" />
@@ -60,9 +60,9 @@
 
 <script setup lang="ts">
 import { toRefs } from 'vue';
-import { Icon } from '@iconify/vue';
 import TodoList from './TodoList.vue';
 import type { BranchEntry } from '../composables/useFileTree';
+import type { TodoSessionView } from '../composables/useTodos';
 import TreeView, {
   type GitBranchInfo,
   type GitDiffStats,
@@ -70,25 +70,10 @@ import TreeView, {
   type TreeNode,
 } from './TreeView.vue';
 
-type TodoItem = {
-  content: string;
-  status: string;
-  priority: string;
-};
-
-type TodoPanelSession = {
-  sessionId: string;
-  title: string;
-  isSubagent: boolean;
-  todos: TodoItem[];
-  loading: boolean;
-  error: string | undefined;
-};
-
 const props = defineProps<{
   collapsed: boolean;
   activeTab: 'todo' | 'tree';
-  todoSessions: TodoPanelSession[];
+  todoSessions: TodoSessionView[];
   treeNodes: TreeNode[];
   expandedTreePaths: string[];
   selectedTreePath?: string;

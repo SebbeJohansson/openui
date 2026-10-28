@@ -17,13 +17,6 @@ const url = ref('');
 const username = ref('');
 const password = ref('');
 
-/**
- * Set to true when the server reports Claude Code CLI support via /api/config.
- * False when running against plain OpenCode or the deployed static UI.
- */
-export const claudeEnabled = ref(false);
-export const claudeUrl = ref('');
-
 export function useCredentials() {
   const authHeader = computed(() => {
     const u = username.value.trim();

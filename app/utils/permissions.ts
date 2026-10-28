@@ -186,7 +186,7 @@ function isAction(value: string): value is PermissionAction {
   return value === 'allow' || value === 'ask' || value === 'deny';
 }
 
-function isPermissionRule(value: unknown): value is PermissionRule {
+export function isPermissionRule(value: unknown): value is PermissionRule {
   if (!value || typeof value !== 'object') return false;
   const record = value as Record<string, unknown>;
   return (

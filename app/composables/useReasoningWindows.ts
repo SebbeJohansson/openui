@@ -277,5 +277,3 @@ export function useReasoningWindows(options: UseReasoningWindowsOptions) {
     bindScope: subscribe,
   };
 }
-
-export type UseReasoningWindowsReturn = ReturnType<typeof useReasoningWindows>;

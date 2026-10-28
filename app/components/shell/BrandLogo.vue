@@ -1,0 +1,24 @@
+<template>
+  <div class="absolute w-0 h-0 -z-10 flex items-center justify-center">
+    <div class="flex fixed flex-col items-center w-96 h-40 translate-x-1/2 -translate-y-1/2">
+      <div class="mb-4">
+        <svg
+          width="24mm"
+          height="12mm"
+          version="1.1"
+          viewBox="0 0 24 12"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="m12.342 2.4512v3.328l1.3352 1.3352v3.9658l-0.67757 0.67756h-1.2953l-0.67757-0.67756v-8.629zm0-1.0562h-1.3153l-0.23914-0.23914v-0.91671l0.23914-0.23914h1.3153l0.23914 0.23914v0.91671zm10.602 9.6852-0.67756 0.67756h-6.6162l-0.67756-0.67756v-1.9928h1.3352v1.3352h2.6305v-2.6505h-3.2882l-0.67756-0.67756v-3.9658l0.67756-0.67757h6.6162l0.67756 0.67757v1.9729h-1.3153v-1.3153h-3.9857v2.6505h4.6234l0.67756 0.67757z"
+            fill="#ffffff"
+          />
+          <path d="m1 0 5.4506 6-5.4506 6h3.6337l4.851-5.34v-1.32l-4.851-5.34z" fill="#60a5fa" />
+        </svg>
+      </div>
+      <div class="text-text-100 rounded-xl bg-surface-900 py-2 px-4">
+        <span class="text-accent-400">openui - OpenCode Visualizer</span>
+      </div>
+    </div>
+  </div>
+</template>

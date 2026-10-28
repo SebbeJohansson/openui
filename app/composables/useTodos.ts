@@ -1,11 +1,22 @@
 import { ref } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
 import * as opencodeApi from '../utils/opencode';
+import { isClaudeSessionId } from '#shared/utils/claude-ids';
 
 export type TodoItem = {
   content: string;
   status: string;
   priority: string;
+};
+
+/** One session's todo list as rendered by the side panel. */
+export type TodoSessionView = {
+  sessionId: string;
+  title: string;
+  isSubagent: boolean;
+  todos: TodoItem[];
+  loading: boolean;
+  error: string | undefined;
 };
 
 export function useTodos(options: {
@@ -54,15 +65,17 @@ export function useTodos(options: {
     const nextTodos: Record<string, TodoItem[]> = {};
     const nextErrors: Record<string, string> = {};
     await Promise.all(
-      sessionIds.filter((id) => !id.startsWith('cc_')).map(async (id) => {
-        try {
-          const data = await opencodeApi.getSessionTodos(id, directory);
-          nextTodos[id] = normalizeTodoItems(data);
-        } catch (error) {
-          nextTodos[id] = [];
-          nextErrors[id] = error instanceof Error ? error.message : String(error);
-        }
-      }),
+      sessionIds
+        .filter((id) => !isClaudeSessionId(id))
+        .map(async (id) => {
+          try {
+            const data = await opencodeApi.getSessionTodos(id, directory);
+            nextTodos[id] = normalizeTodoItems(data);
+          } catch (error) {
+            nextTodos[id] = [];
+            nextErrors[id] = error instanceof Error ? error.message : String(error);
+          }
+        }),
     );
     if (requestId !== todoReloadRequestId) return;
     todoLoadingBySessionId.value = {};

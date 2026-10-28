@@ -15,6 +15,7 @@ import type {
 } from '../types/sse';
 import type { SessionScope } from './useGlobalEvents';
 import { useDeltaAccumulator } from './useDeltaAccumulator';
+import { asNonEmptyString } from '../utils/strings';
 
 type MessageEntry = {
   info?: MessageInfo;
@@ -37,10 +38,6 @@ function toRecord(value: unknown): Record<string, unknown> | undefined {
   return value as Record<string, unknown>;
 }
 
-function asString(value: unknown): string | undefined {
-  return typeof value === 'string' && value.length > 0 ? value : undefined;
-}
-
 function asNumber(value: unknown): number | undefined {
   return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
 }
@@ -48,17 +45,17 @@ function asNumber(value: unknown): number | undefined {
 function isMessageInfo(value: unknown): value is MessageInfo {
   const rec = toRecord(value);
   if (!rec) return false;
-  if (!asString(rec.id)) return false;
-  if (!asString(rec.sessionID)) return false;
+  if (!asNonEmptyString(rec.id)) return false;
+  if (!asNonEmptyString(rec.sessionID)) return false;
   return rec.role === 'user' || rec.role === 'assistant';
 }
 
 function isMessagePart(value: unknown): value is MessagePart {
   const rec = toRecord(value);
   if (!rec) return false;
-  if (!asString(rec.id)) return false;
-  if (!asString(rec.sessionID)) return false;
-  if (!asString(rec.messageID)) return false;
+  if (!asNonEmptyString(rec.id)) return false;
+  if (!asNonEmptyString(rec.sessionID)) return false;
+  if (!asNonEmptyString(rec.messageID)) return false;
   return typeof rec.type === 'string';
 }
 
@@ -87,12 +84,16 @@ function normalizeTokens(value: unknown): MessageUsage['tokens'] | undefined {
 
 function getProviderId(info?: MessageInfo): string | undefined {
   if (!info) return undefined;
-  return info.role === 'assistant' ? asString(info.providerID) : asString(info.model.providerID);
+  return info.role === 'assistant'
+    ? asNonEmptyString(info.providerID)
+    : asNonEmptyString(info.model.providerID);
 }
 
 function getModelId(info?: MessageInfo): string | undefined {
   if (!info) return undefined;
-  return info.role === 'assistant' ? asString(info.modelID) : asString(info.model.modelID);
+  return info.role === 'assistant'
+    ? asNonEmptyString(info.modelID)
+    : asNonEmptyString(info.model.modelID);
 }
 
 function normalizeUsage(info?: MessageInfo): MessageUsage | undefined {
@@ -120,10 +121,9 @@ function resolveError(info?: MessageInfo): MessageError {
   if (!info || info.role !== 'assistant') return null;
   if (!info.error) return status === 'error' ? { name: 'Error', message: '' } : null;
   const data = toRecord(info.error.data);
-  const message = asString(data?.message) ?? '';
-  const statusCode =
-    typeof data?.statusCode === 'number' ? (data.statusCode as number) : undefined;
-  const responseBody = asString(data?.responseBody);
+  const message = asNonEmptyString(data?.message) ?? '';
+  const statusCode = typeof data?.statusCode === 'number' ? (data.statusCode as number) : undefined;
+  const responseBody = asNonEmptyString(data?.responseBody);
   return { name: info.error.name, message, statusCode, responseBody };
 }
 
@@ -392,6 +392,12 @@ function getFinalAnswer(rootId: string): MessageInfo | undefined {
   return assistants[assistants.length - 1];
 }
 
+function hasAssistantMessages(rootId: string): boolean {
+  return getThread(rootId).some(
+    (message) => message.role === 'assistant' && hasTextContent(message.id),
+  );
+}
+
 function loadHistory(entries: unknown[]) {
   let collectionChanged = false;
   for (const entry of entries) {
@@ -468,6 +474,7 @@ export function useMessages() {
     getChildren,
     getThread,
     getFinalAnswer,
+    hasAssistantMessages,
     updateMessage,
     updatePart,
     loadHistory,

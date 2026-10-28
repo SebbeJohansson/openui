@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { guessLanguageFromPath } from '../ToolWindow/utils';
+import { guessLanguageFromPath } from '../../utils/toolWindowFormat';
 import DiffRenderer from '../renderers/DiffRenderer.vue';
 import ContentViewer from './ContentViewer.vue';
 

@@ -1,8 +1,15 @@
+# Re-include directories: a `*/` rule in ~/.gitignore leaks in via oxlint.
+!*/
+
 /node_modules/
-/dist
-/logs
-/.sisyphus
-/?
-/BUGS*
-/TODO*
+/.nuxt
+/.output
+/.data
+/.env
+/coverage
 /.yarn/install-state.gz
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/

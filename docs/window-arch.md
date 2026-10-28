@@ -10,7 +10,7 @@ FloatingWindow  (window layer — drag, resize, z-index, titlebar)
 `FloatingWindow` is a generic window shell managed by `useFloatingWindows`.
 The `entry.component` plugged into each window determines what gets rendered.
 
-App.vue picks the appropriate Viewer depending on the use case:
+The feature composables pick the appropriate Viewer depending on the use case:
 
 | Use case              | component          |
 | --------------------- | ------------------ |
@@ -166,42 +166,54 @@ Used by: `ThreadBlock`, `ThreadHistoryContent`, `Welcome`,
 
 ---
 
-## Call Sites in App.vue
+## Where windows are opened
 
-### `openFileViewer(path, lines)`
+Every window is opened by a feature composable in `app/composables/`, never by a
+component directly.
 
-Opens a file from the file tree or output panel.
+### `useFileViewers`
 
-```
-open-file event → openFileViewer()
-  → fw.open(key, { component: ContentViewer, props: { path, lang, ... } })
-  → API fetch → fw.updateOptions(key, { props: { fileContent, ... } })
-```
-
-For binary files with image extensions, `imageSrc` (data URL) is also passed
-so ContentViewer offers an Image / Hex toggle.
-
-### `handleOpenImage({ url, filename })`
-
-Opens an image from message attachments or input panel.
+| Function                       | Opens                                    |
+| ------------------------------ | ---------------------------------------- |
+| `openFileViewer(path, lines)`  | A file from the tree or the output panel |
+| `openImage({ url, filename })` | An image attachment                      |
 
 ```
-open-image event → handleOpenImage()
-  → fw.open(key, { component: ContentViewer, props: { imageSrc, imageAlt } })
+open-file event -> openFileViewer()
+  -> fw.open(key, { component: ContentViewer, props: { path, lang, ... } })
+  -> API fetch -> fw.updateOptions(key, { props: { fileContent, ... } })
 ```
 
-### `openGitDiff`, `openAllGitDiff`, `handleShowMessageDiff`, `handleShowCommit`
+Binary files with an image extension also get `imageSrc` (a data URL), so
+ContentViewer can offer the Image / Hex toggle.
 
-Open diff views from the file tree or conversation.
+### `useGitSnapshots`
+
+`openGitDiff`, `openAllGitDiff`, `showMessageDiff` and `showCommit` all end in:
 
 ```
-  → fw.open(key, { component: DiffViewer, props: { diffCode, diffAfter, diffTabs, ... } })
+  -> fw.open(key, { component: DiffViewer, props: { diffCode, diffAfter, diffTabs, ... } })
 ```
 
-### Debug viewers
+The content comes from git through a one-shot PTY; the scripts and their parsers
+live in `app/utils/gitSnapshotScripts.ts`.
 
-`openDebugSessionViewer`, `openDebugNotificationViewer` use `ContentViewer`
-with plain text content.
+### `useToolWindows`
+
+`openToolPartAsWindow` renders a tool call through `utils/toolRenderers.ts`.
+`openHistoryTool`, `openHistoryReasoning` and `showThreadHistory` open the
+history pop-ups; they are closed together via `closeHistoryToolWindows`.
+
+### `useTerminalWindows`
+
+`openShellFromInput` and `runTreeShellCommand` open a `ShellContent` window per
+PTY and own its xterm instance. A shell window's close must go through
+`onWindowClosed(key)` so the PTY is killed.
+
+### `useDebugCommands`
+
+`/debug session` and `/debug notification` open plain-text `ContentViewer`
+windows.
 
 ---
 
@@ -224,9 +236,14 @@ app/
 │   └── CodeContent.vue            (low-level HTML injector used by renderers)
 ├── composables/
 │   ├── useFloatingWindows.ts      (window state management)
-│   └── useFloatingWindow.ts       (per-window API via provide/inject)
+│   ├── useFloatingWindow.ts       (per-window API via provide/inject)
+│   ├── useFloatingCanvas.ts       (canvas element, extent, default positions)
+│   ├── useFileViewers.ts          (file and image windows)
+│   ├── useGitSnapshots.ts         (diff windows)
+│   ├── useToolWindows.ts          (tool call and history windows)
+│   ├── useTerminalWindows.ts      (xterm shell windows)
+│   └── useCodeRender.ts           (Shiki syntax highlighting composable)
 ├── utils/
-│   ├── useCodeRender.ts           (Shiki syntax highlighting composable)
 │   └── workerRenderer.ts          (Web Worker communication)
 └── workers/
     └── render-worker.ts           (markdown-it + Shiki in a Web Worker)

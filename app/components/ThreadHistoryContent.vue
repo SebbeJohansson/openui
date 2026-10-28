@@ -443,20 +443,40 @@ function formatMessageTime(value?: number) {
 
 .history-item-tool {
   cursor: pointer;
-  border-color: color-mix(in srgb, var(--tool-color, var(--theme-text-subtle)) 40%, var(--theme-bg-hover));
+  border-color: color-mix(
+    in srgb,
+    var(--tool-color, var(--theme-text-subtle)) 40%,
+    var(--theme-bg-hover)
+  );
   transition:
     border-color 0.15s,
     background 0.15s;
 }
 
 .history-item-tool:hover {
-  border-color: color-mix(in srgb, var(--tool-color, var(--theme-text-subtle)) 60%, var(--theme-bg-hover));
-  background: color-mix(in srgb, var(--tool-color, var(--theme-text-subtle)) 6%, var(--theme-bg-elevated));
+  border-color: color-mix(
+    in srgb,
+    var(--tool-color, var(--theme-text-subtle)) 60%,
+    var(--theme-bg-hover)
+  );
+  background: color-mix(
+    in srgb,
+    var(--tool-color, var(--theme-text-subtle)) 6%,
+    var(--theme-bg-elevated)
+  );
 }
 
 .history-item-tool .history-meta {
-  background: color-mix(in srgb, var(--tool-color, var(--theme-text-subtle)) 18%, var(--theme-bg-overlay));
-  border-bottom-color: color-mix(in srgb, var(--tool-color, var(--theme-text-subtle)) 25%, var(--theme-bg-hover));
+  background: color-mix(
+    in srgb,
+    var(--tool-color, var(--theme-text-subtle)) 18%,
+    var(--theme-bg-overlay)
+  );
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--tool-color, var(--theme-text-subtle)) 25%,
+    var(--theme-bg-hover)
+  );
 }
 
 .history-tool-badge {

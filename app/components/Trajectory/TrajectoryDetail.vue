@@ -119,7 +119,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { formatTokenCount } from '../../utils/formatters';
-import { formatDuration, formatTimestamp, highlightJson, inferSchema, toJson } from './metrics';
+import {
+  formatDuration,
+  formatTimestamp,
+  highlightJson,
+  inferSchema,
+  toJson,
+} from '../../utils/trajectoryMetrics';
 import type { TrajectoryEvent } from '../../composables/useTrajectory';
 
 const props = defineProps<{

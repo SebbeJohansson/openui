@@ -31,24 +31,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-
-type TodoEntry = {
-  content: string;
-  status: string;
-  priority: string;
-};
-
-type TodoSession = {
-  sessionId: string;
-  title: string;
-  isSubagent: boolean;
-  todos: TodoEntry[];
-  loading: boolean;
-  error: string | undefined;
-};
+import type { TodoSessionView } from '../composables/useTodos';
 
 const props = defineProps<{
-  sessions: TodoSession[];
+  sessions: TodoSessionView[];
 }>();
 
 const totalCount = computed(() =>

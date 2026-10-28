@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
 import CodeContent from '../CodeContent.vue';
-import { type CodeRenderParams, useCodeRender } from '../../utils/useCodeRender';
+import { type CodeRenderParams, useCodeRender } from '../../composables/useCodeRender';
 
 const props = defineProps<{
   path?: string;

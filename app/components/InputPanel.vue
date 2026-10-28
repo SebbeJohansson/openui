@@ -41,7 +41,7 @@
                 title="Bookmark"
                 @click.stop="addFavorite(entry)"
               >
-                <Icon icon="lucide:bookmark" :width="14" :height="14" />
+                <Icon name="lucide:bookmark" :size="14" />
               </button>
             </DropdownItem>
           </div>
@@ -86,7 +86,7 @@
                 title="Remove from favorites"
                 @click.stop="confirmRemoveFavorite(i)"
               >
-                <Icon icon="lucide:trash-2" :width="14" :height="14" />
+                <Icon name="lucide:trash-2" :size="14" />
               </button>
             </DropdownItem>
           </div>
@@ -132,7 +132,7 @@
             class="attachment-remove"
             @click="$emit('remove-attachment', item.id)"
           >
-            <Icon icon="lucide:x" :width="12" :height="12" />
+            <Icon name="lucide:x" :size="12" />
           </button>
         </div>
       </div>
@@ -327,7 +327,7 @@
                       class="model-picker-manage-btn"
                       @click.stop="$emit('open-manage-models')"
                     >
-                      <Icon icon="lucide:eye-off" :width="11" :height="11" />
+                      <Icon name="lucide:eye-off" :size="11" />
                       Manage hidden models
                     </button>
                   </div>
@@ -376,7 +376,7 @@
             "
             @click="$emit('open-permissions')"
           >
-            <Icon icon="lucide:shield-check" :width="16" :height="16" />
+            <Icon name="lucide:shield-check" :size="16" />
             <span v-if="(props.pendingPermissionCount ?? 0) > 0" class="permissions-badge">
               {{ props.pendingPermissionCount }}
             </span>
@@ -388,11 +388,7 @@
             :title="suppressAutoWindows ? 'Auto windows suppressed' : 'Suppress auto windows'"
             @click="suppressAutoWindows = !suppressAutoWindows"
           >
-            <Icon
-              :icon="suppressAutoWindows ? 'lucide:eye-off' : 'lucide:eye'"
-              :width="16"
-              :height="16"
-            />
+            <Icon :name="suppressAutoWindows ? 'lucide:eye-off' : 'lucide:eye'" :size="16" />
           </button>
           <button
             type="button"
@@ -401,9 +397,8 @@
             @click="messageValue.trim() ? bookmarkCurrentInput() : (favoritesOpen = true)"
           >
             <Icon
-              :icon="messageValue.trim() ? 'lucide:bookmark-plus' : 'lucide:bookmark'"
-              :width="16"
-              :height="16"
+              :name="messageValue.trim() ? 'lucide:bookmark-plus' : 'lucide:bookmark'"
+              :size="16"
             />
             <Transition name="bookmark-toast">
               <span v-if="bookmarkToastVisible" class="bookmark-toast">Bookmarked!</span>
@@ -416,7 +411,7 @@
             title="Attach"
             @click="triggerFileInput"
           >
-            <Icon icon="lucide:paperclip" :width="16" :height="16" />
+            <Icon name="lucide:paperclip" :size="16" />
           </button>
           <button
             v-if="isThinking"
@@ -426,7 +421,7 @@
             title="Stop (ESC x2)"
             @click="$emit('abort')"
           >
-            <Icon icon="ph:stop-fill" :width="16" :height="16" />
+            <Icon name="lucide:square" :size="16" />
           </button>
           <button
             v-else
@@ -436,7 +431,7 @@
             :title="sendTooltip"
             @click="$emit('send')"
           >
-            <Icon icon="lucide:send" :width="16" :height="16" />
+            <Icon name="lucide:send" :size="16" />
           </button>
         </div>
       </div>
@@ -446,7 +441,6 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
-import { Icon } from '@iconify/vue';
 import Dropdown from './Dropdown.vue';
 import DropdownItem from './Dropdown/Item.vue';
 import DropdownLabel from './Dropdown/Label.vue';
@@ -454,6 +448,7 @@ import DropdownSearch from './Dropdown/Search.vue';
 import { useMessages } from '../composables/useMessages';
 import { useFavoriteMessages } from '../composables/useFavoriteMessages';
 import { useSettings } from '../composables/useSettings';
+import { matchesQuery } from '../utils/session';
 type ModelOption = {
   id: string;
   modelID: string;
@@ -495,7 +490,7 @@ const props = defineProps<{
   disabled?: boolean;
   /** When true, hides OpenCode-specific controls (model, agent, build pickers). */
   isClaudeSession?: boolean;
-}>(); 
+}>();
 
 const emit = defineEmits<{
   (event: 'update:message-input', value: string): void;
@@ -1079,12 +1074,6 @@ const groupedModelOptions = computed(() => {
   });
   return Array.from(grouped.values());
 });
-
-function matchesQuery(query: string, ...fields: (string | undefined)[]) {
-  const terms = query.split(/\s+/).filter(Boolean);
-  if (terms.length === 0) return false;
-  return terms.every((term) => fields.some((field) => field?.toLowerCase().includes(term)));
-}
 
 const filteredGroupedModelOptions = computed(() => {
   const query = modelSearchQuery.value.trim().toLowerCase();

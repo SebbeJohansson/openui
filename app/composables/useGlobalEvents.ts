@@ -4,6 +4,7 @@ import type { TabToWorkerMessage, WorkerToTabMessage } from '../types/sse-worker
 import { createSseConnection } from '../utils/sseConnection';
 import { TypedEmitter } from '../utils/eventEmitter';
 import SseSharedWorker from '../workers/sse-shared-worker?sharedworker';
+import { normalizeBaseUrl } from '../utils/url';
 
 type EventKey = keyof GlobalEventMap;
 type ConnectOptions = { failFast?: boolean; timeoutMs?: number };
@@ -128,10 +129,6 @@ function computeAllowedSessionIds(
     if (children) stack.push(...children);
   }
   return allowed;
-}
-
-function normalizeBaseUrl(baseUrl: string) {
-  return baseUrl.replace(/\/+$/, '');
 }
 
 function createDirectTransport(callbacks: TransportCallbacks): Transport {
@@ -344,16 +341,14 @@ export function useGlobalEvents(credentials: CredentialsBinding) {
     ? createSharedWorkerTransport({
         onPacket: routePacket,
         onOpen: () => emitter.emit('connection.open', {}),
-        onError: (message, statusCode) =>
-          emitter.emit('connection.error', { message, statusCode }),
+        onError: (message, statusCode) => emitter.emit('connection.error', { message, statusCode }),
         onReconnected: () => emitter.emit('connection.reconnected', {}),
         onWorkerMessage: (message) => workerMessageHandler?.(message) ?? false,
       })
     : createDirectTransport({
         onPacket: routePacket,
         onOpen: () => emitter.emit('connection.open', {}),
-        onError: (message, statusCode) =>
-          emitter.emit('connection.error', { message, statusCode }),
+        onError: (message, statusCode) => emitter.emit('connection.error', { message, statusCode }),
         onReconnected: () => emitter.emit('connection.reconnected', {}),
         onWorkerMessage: (message) => workerMessageHandler?.(message) ?? false,
       });

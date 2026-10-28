@@ -2,14 +2,9 @@
   
   # openui
   
-  ![License](https://img.shields.io/badge/license-MIT-green) 
-<a href="https://visitor-badge.laobi.icu" title="Go to Source">
-  <picture>
-      <img src="https://visitor-badge.laobi.icu/badge?page_id=sebbejohansson.openui" />
-  </picture>
-</a>
+  ![License](https://img.shields.io/badge/license-MIT-green)
 
-A web UI for [OpenCode](https://github.com/sst/opencode) and [Claude Code CLI](https://github.com/anthropics/claude-code), designed for daily use. It connects to a running OpenCode instance and/or the Claude Code CLI and provides a browser-based, window-style interface for managing sessions, viewing tool output, and interacting with AI agents in real time.
+A web UI for [OpenCode](https://github.com/sst/opencode) and the [Claude Code CLI](https://github.com/anthropics/claude-code), meant for daily use. It talks to a running OpenCode server, the Claude Code CLI, or both at once, and puts sessions, tool output and live agent activity in a browser-based, window-style interface.
 
   <img src="docs/demo.gif" alt="Demo" width="800" />
 
@@ -17,7 +12,7 @@ Live demo: [https://sebbejohansson.github.io/openui/](https://sebbejohansson.git
 
 <div>
 
-*previously known as opencode-vis*
+_previously known as opencode-vis_
 
 </div>
 
@@ -29,57 +24,58 @@ Live demo: [https://sebbejohansson.github.io/openui/](https://sebbejohansson.git
 
 - **Review-first floating windows** that keep tool output and agent reasoning in context
 - **Trajectory view** flattens the whole session into one chronological stream (system prompts, user turns, context injections, reasoning, tool calls and results, subagents) with a lane timeline, per-record payload/result/timing inspection, search, and JSON export
-- Session management with **multi-project and worktree** support, plus a searchable, sorted **sessions modal**
-- **Customizable themes** with a built-in theme selector and support for your own custom themes
-- **Model picker** with clear provider/model info, the ability to **hide models** you don't use, and **per-agent model memory** that remembers your choice for each agent
-- Syntax-highlighted **code and diff viewers** built for fast, confident review
-- Permission and question prompts for interactive agent workflows
-- **Responsive mobile view** for reviewing sessions on the go
-- **Notification sounds** (peon ping stream support) to stay aware of agent activity
-- Robust **error handling** and cross-platform support (including Windows file trees)
+- **Session management** across multiple projects and worktrees, plus a searchable, sorted sessions modal
+- **Themes** with a built-in selector, or write your own
+- **Model picker** with clear provider and model info, a way to hide models you don't use, and per-agent memory of the model you picked last
+- **Code and diff viewers** with syntax highlighting
+- **Permission and question prompts** for interactive agent workflows
+- **Mobile view** for reviewing sessions away from your desk
+- **Notification sounds**, including peon ping streams, so you notice when an agent wants you
+- Error handling and cross-platform support, including Windows file trees
 - Embedded terminal powered by xterm.js
-- Support for **Github Copilot Auto Mode** with the plugin <a href="https://github.com/m0wer/opencode-github-copilot-auto-model">opencode-github-copilot-auto-model</a>
+- Support for Github Copilot Auto Mode through the <a href="https://github.com/m0wer/opencode-github-copilot-auto-model">opencode-github-copilot-auto-model</a> plugin
 
-#### Experimental Features
-- **Claude Code CLI support** via the unified proxy. See OpenCode and Claude Code sessions side by side in the same UI
+#### Experimental features
+
+- **Claude Code CLI support** served by the built-in API. OpenCode and Claude Code sessions sit side by side in the same UI
 
 ## Showcase
 
 ### Trajectory view
 
-See what the agent did, and when it happened.
+Every record in a session on one timeline, with the payload, result and timing behind each one.
 
 <p>
   <img src="docs/showcase/trajectory.png" alt="Trajectory" width="800" />
 </p>
 
-### Theme selector & custom themes
+### Theme selector and custom themes
 
-Pick from a range of built-in themes or craft your own custom theme to make the UI your own.
+Pick one of the built-in themes, or define your own colors.
 
 <p>
   <img src="docs/showcase/theme-selector.png" alt="Theme selector" width="400" />
   <img src="docs/showcase/custom-themes.png" alt="Custom themes" width="400" />
 </p>
 
-### Model selector & hiding models
+### Model selector and hidden models
 
-Quickly switch between models and hide the ones you never use to keep the picker focused.
+Switch models mid-session, and hide the ones you never touch so the list stays short.
 
 <p>
   <img src="docs/showcase/model-selector.png" alt="Model selector" width="400" />
   <img src="docs/showcase/hidden-models.png" alt="Hidden models" width="400" />
 </p>
 
-## How to Use
+## How to use
 
 ### Cloud
 
-**No installation required** - just open the hosted version in your browser:
+Nothing to install. Open the hosted version in your browser:
 
 **<https://sebbejohansson.github.io/openui/>**
 
-All you need is a running OpenCode server with CORS enabled. Start it with:
+You need a running OpenCode server with CORS enabled. Start it with:
 
 ```bash
 opencode serve --cors https://sebbejohansson.github.io
@@ -104,8 +100,8 @@ opencode serve
 
 ### Local (OpenCode only)
 
-The hosted version connects to your local OpenCode server, which some browsers may block due to security restrictions.
-If this happens, you can serve the UI locally instead:
+The hosted version connects to your local OpenCode server, which some browsers block for security reasons.
+When that happens, serve the UI locally instead.
 
 Start the UI server:
 
@@ -123,77 +119,126 @@ Then open `http://localhost:3000` in your browser.
 
 ---
 
-### Local (OpenCode + Claude Code — unified proxy)
+### Local (OpenCode + Claude Code)
 
-The unified proxy runs alongside OpenCode and adds Claude Code CLI sessions to the same UI. Both appear in the same session dropdown — you can run them simultaneously and switch between them seamlessly.
+The server can also run Claude Code CLI sessions. Both kinds appear in the same
+session dropdown, and you can run them side by side.
 
 **Requirements:**
-- OpenCode running on its default port (4096, or set `OPENCODE_URL` if different)
-- Claude Code CLI installed (`npm install -g @anthropic-ai/claude-code`)
-- Node.js 18+
 
-**Single command (dev mode — spawns Vite automatically):**
+- OpenCode running on its default port (4096, or set `OPENCODE_URL`)
+- Claude Code CLI installed (`npm install -g @anthropic-ai/claude-code`)
+- Node.js 24 or newer
+
+**Development:**
 
 ```bash
-EXPERIMENTAL_CLAUDE=true OPENCODE_URL=http://localhost:4096 yarn dev:full
+EXPERIMENTAL_CLAUDE=true OPENCODE_URL=http://localhost:4096 yarn dev
 ```
 
-**Or for production (serves pre-built `dist/`):**
+**Production:**
 
 ```bash
 yarn build
-EXPERIMENTAL_CLAUDE=true OPENCODE_URL=http://localhost:4096 yarn dev:full:prod
+EXPERIMENTAL_CLAUDE=true OPENCODE_URL=http://localhost:4096 yarn start
 ```
 
-**What you get:**
-- All your OpenCode sessions appear as normal
-- All your Claude Code sessions from `~/.claude/projects/` appear in the same list, with full conversation history
-- Creating a new Claude Code session: send a `POST /session` with `{ "_source": "claude", "directory": "/path/to/project" }` (UI button coming soon)
-- Resuming an old Claude Code session: just select it — history is replayed from disk, and `claude --resume` is called automatically when you send the first prompt
+**How it behaves:**
+
+- Your OpenCode sessions appear as normal
+- Your Claude Code sessions from `~/.claude/projects/` appear in the same list, with their full conversation history
+- To start a new Claude Code session, use "New Claude session" in the session menu
+- To resume an old one, just select it. The server reads the session's JSONL log and serves it from `/api/claude/sessions/<id>/messages`, so the thread renders before any subprocess starts. `claude --resume` runs when you send the first prompt
 
 **Environment variables:**
 
-| Variable | Default | Description |
-|---|---|---|
-| `EXPERIMENTAL_CLAUDE` | `false` | Opt in to Claude Code CLI support and expose the Claude routes in the unified proxy |
-| `CLAUDE_PROXY_PORT` | `4600` | Port the unified proxy listens on |
-| `OPENCODE_URL` | `http://localhost:4096` | URL of the running OpenCode server |
+| Variable              | Default     | Description                                                           |
+| --------------------- | ----------- | --------------------------------------------------------------------- |
+| `EXPERIMENTAL_CLAUDE` | `false`     | Opt in to Claude Code CLI support and expose the `/api/claude` routes |
+| `OPENCODE_URL`        | unset       | URL of the running OpenCode server. When unset, the UI asks for it    |
+| `VIS_PORT` / `PORT`   | `3000`      | Port the built server listens on (`--port` also works)                |
+| `NUXT_CLAUDE_BIN`     | auto-detect | Path to the `claude` binary                                           |
+
+The `NUXT_`-prefixed names (`NUXT_OPENCODE_URL`, `NUXT_CLAUDE_ENABLED`,
+`NUXT_CLAUDE_BIN`) work too, and are what a `.env` file should use.
 
 ---
 
 ## Architecture
 
 ```
-Browser (openui Vue SPA)
-        │
-        │  HTTP + SSE
-        ▼
-Unified proxy  server-claude/index.ts  (port 4600)
-        ├── forwards OpenCode calls ──────────────► OpenCode server (port 4096)
-        └── manages Claude Code sessions ─────────► claude subprocess(es)
-                                                     (one per active session)
+Browser (Nuxt 4 SPA)
+        |
+        |  HTTP + SSE, same origin
+        v
+Nitro server  server/
+        |-- GET /api/config              -> which OpenCode server to use, is Claude enabled
+        |-- /api/claude/**               -> Claude Code sessions
+        |                                   (one `claude` subprocess per session,
+        |                                    plus stored history read from ~/.claude/projects/)
+        v
+Browser also talks directly to the OpenCode server (port 4096) over HTTP + SSE
 ```
 
-The proxy translates Claude Code's `stream-json` stdout events into the OpenCode SSE envelope format the Vue app already understands. The Vue app has no knowledge of which backend owns a given session — it just sees a flat list of projects and sessions.
+The server translates Claude Code's `stream-json` output into the same SSE
+envelope the app already uses for OpenCode, and reshapes stored JSONL logs into
+the same message and part records. The UI does not care which backend owns a
+session; it sees one flat list of projects and sessions.
 
-**`server-claude/` files:**
+**Layout:**
 
-| File | Purpose |
-|---|---|
-| `index.ts` | Hono HTTP server, route handling, SSE fan-out |
-| `storage.ts` | Reads `~/.claude/projects/` — enumerates projects and sessions from JSONL files |
-| `sessions.ts` | Subprocess lifecycle — spawn, resume, write prompts, handle permission requests |
-| `translator.ts` | Converts Claude stream-json events → OpenCode SSE shapes |
-| `types.ts` | TypeScript types for Claude's wire protocol and stored JSONL format |
+| Path             | Purpose                                                                                                                             |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `app/`           | The SPA. `pages/index.vue` is the only route; `components/shell/` is the app shell; `composables/` holds one composable per feature |
+| `server/`        | Nitro routes (`api/config`, `api/claude/**`) and the Claude subprocess code in `server/utils/claude/`                               |
+| `shared/`        | Types and id helpers used by both sides                                                                                             |
+| `bin/openui.mjs` | The published launcher; starts the built Nitro server                                                                               |
+
+**Reference docs:**
+
+| Doc                                          | Covers                                                                       |
+| -------------------------------------------- | ---------------------------------------------------------------------------- |
+| [docs/projects.md](./docs/projects.md)       | The project/sandbox/session data model and the SharedWorker's `stateBuilder` |
+| [docs/SSE.md](./docs/SSE.md)                 | The SSE stream shape, in enough detail to write a client parser from scratch |
+| [docs/API.md](./docs/API.md)                 | OpenCode server REST API reference                                           |
+| [docs/window-arch.md](./docs/window-arch.md) | How windows, viewers and renderers layer to display tool output              |
 
 ---
 
 ## Development
 
+Reading Claude Code's session files and parsing OpenCode's event stream come
+from [agent-conduit](https://github.com/SebbeJohansson/agent-conduit), shared with
+my-widget, and installed from npm:
+
 ```sh
 yarn install
 yarn dev
 ```
+
+To work on agent-conduit at the same time, point `AGENT_CONDUIT_DIR` in `.env` at a
+checkout next to this one and keep its build running:
+
+```sh
+echo 'AGENT_CONDUIT_DIR=../agent-conduit' >> .env
+(cd ../agent-conduit && yarn install && yarn dev)
+```
+
+The dev server listens on `http://localhost:5173`. The built server and `npx openui`
+listen on 3000 instead. `PORT` or `--port` overrides either one.
+
+Useful scripts:
+
+| Script            | What it does                                                   |
+| ----------------- | -------------------------------------------------------------- |
+| `yarn dev`        | Nuxt dev server, API included                                  |
+| `yarn check`      | Lint, format check, typecheck and tests                        |
+| `yarn build`      | Build the Nitro server (what npm ships)                        |
+| `yarn generate`   | Build the static site (`NUXT_APP_BASE_URL=/openui/` for Pages) |
+| `yarn test`       | Vitest, the whole suite                                        |
+| `yarn test:watch` | Vitest in watch mode over `app`, `shared` and `server/utils`   |
+
+Node 24 or newer is required. See [AGENTS.md](./AGENTS.md) for conventions and gotchas.
 
 ## Support the project
 
@@ -210,8 +255,8 @@ yarn dev
 
 ## License
 
-MIT - see [LICENSE](./LICENSE) for details.
+MIT. See [LICENSE](./LICENSE) for details.
 
 ## Origins
 
-This project originated as a fork of [xenodrive/vis](https://github.com/xenodrive/vis). It was separated from the fork network because the original project saw no continued development, and this version has since deviated significantly in both features and architecture.
+This project started as a fork of [xenodrive/vis](https://github.com/xenodrive/vis). It left the fork network because the original saw no continued development, and it has since drifted a long way from it in both features and architecture.

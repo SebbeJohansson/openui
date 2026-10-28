@@ -10,7 +10,7 @@
       <header class="modal-header">
         <div class="modal-title">Hidden Models</div>
         <button type="button" class="modal-close-button" @click="dialogRef?.close()">
-          <Icon icon="lucide:x" :width="14" :height="14" />
+          <Icon name="lucide:x" :size="14" />
         </button>
       </header>
       <div class="modal-description">
@@ -54,7 +54,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { Icon } from '@iconify/vue';
 import { useHiddenModels } from '../composables/useHiddenModels';
 import { useAgentModelMemory } from '../composables/useAgentModelMemory';
 
@@ -93,7 +92,10 @@ watch(
 );
 
 const groupedOptions = computed(() => {
-  const groups = new Map<string, { providerID: string; providerLabel: string; models: ModelOption[] }>();
+  const groups = new Map<
+    string,
+    { providerID: string; providerLabel: string; models: ModelOption[] }
+  >();
   for (const model of props.allModelOptions) {
     const providerID = model.providerID ?? 'unknown';
     const providerLabel = model.providerLabel ?? providerID;
@@ -295,7 +297,9 @@ function resetAll() {
   border-radius: 6px;
   padding: 4px 10px;
   cursor: pointer;
-  transition: color 0.1s, border-color 0.1s;
+  transition:
+    color 0.1s,
+    border-color 0.1s;
 }
 
 .reset-button:hover {

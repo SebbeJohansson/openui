@@ -12,7 +12,7 @@
             :title="option.hint"
             @click="setMetric(option.id)"
           >
-            <Icon :icon="option.icon" :width="12" :height="12" />
+            <Icon :name="option.icon" :size="12" />
             {{ option.label }}
           </button>
           <button
@@ -21,13 +21,13 @@
             title="Download this trajectory as JSON"
             @click="exportTrajectory"
           >
-            <Icon icon="lucide:download" :width="12" :height="12" />
+            <Icon name="lucide:download" :size="12" />
             Export
           </button>
         </div>
 
         <div class="tj-search">
-          <Icon icon="lucide:search" :width="12" :height="12" />
+          <Icon name="lucide:search" :size="12" />
           <input
             v-model="search"
             type="search"
@@ -115,7 +115,7 @@
 
         <div v-if="isMobile && selectedEvent" class="tj-mobile-detail">
           <button type="button" class="tj-back" @click="selectedKey = null">
-            <Icon icon="lucide:arrow-left" :width="12" :height="12" />
+            <Icon name="lucide:arrow-left" :size="12" />
             Back to records
           </button>
           <TrajectoryDetail :event="selectedEvent" :origin-time="stats.startTime" />
@@ -129,11 +129,14 @@
 </template>
 
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
 import { computed, nextTick, ref, watch } from 'vue';
 import TrajectoryDetail from './TrajectoryDetail.vue';
 import TrajectoryTimeline from './TrajectoryTimeline.vue';
-import { TRAJECTORY_METRICS, formatDuration, type TrajectoryMetric } from './metrics';
+import {
+  TRAJECTORY_METRICS,
+  formatDuration,
+  type TrajectoryMetric,
+} from '../../utils/trajectoryMetrics';
 import { useIsMobile } from '../../composables/useIsMobile';
 import { useTrajectory, type TrajectoryEvent } from '../../composables/useTrajectory';
 import { formatTokenCount } from '../../utils/formatters';

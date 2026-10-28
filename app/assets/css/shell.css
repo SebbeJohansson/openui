@@ -1,0 +1,509 @@
+/*
+ * Application shell styles.
+ *
+ * Global rather than scoped: the selectors below span elements rendered by
+ * several shell components (header, side panel, output, composer, floating
+ * window canvas), so scoping them to one component would break the others.
+ */
+.app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 12px;
+  box-sizing: border-box;
+}
+
+.app-loading-view {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  z-index: 0;
+}
+
+.app-loading-card {
+  position: relative;
+  width: min(420px, 92vw);
+  border: 1px solid var(--theme-border);
+  background: var(--theme-bg-overlay);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--theme-bg-base) 50%, transparent);
+  text-align: center;
+}
+
+.app-loading-spinner {
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  border: 3px solid var(--theme-border-subtle);
+  border-top-color: var(--theme-text-secondary);
+  animation: app-loading-spin 0.85s linear infinite;
+}
+
+.app-loading-title {
+  margin: 0;
+  color: var(--theme-text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.app-loading-message {
+  margin: 8px 0 0;
+  color: var(--theme-text-muted);
+  font-size: 12px;
+}
+
+.app-loading-retry {
+  margin-top: 14px;
+  border: 1px solid var(--theme-border);
+  background: var(--theme-bg-hover);
+  color: var(--theme-text-secondary);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.app-loading-retry:hover {
+  background: var(--theme-border);
+}
+
+.app-loading-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.app-loading-abort {
+  background: transparent;
+  border-color: var(--theme-border-strong);
+  color: var(--theme-text-muted);
+}
+
+.app-loading-abort:hover {
+  background: var(--theme-bg-hover);
+  color: var(--theme-text-secondary);
+}
+
+.app-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.app-login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.app-login-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--theme-bg-hover);
+  border: 1px solid var(--theme-border);
+  border-radius: 6px;
+  color: var(--theme-text-secondary);
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.app-login-input::placeholder {
+  color: var(--theme-text-subtle);
+}
+
+.app-login-input:focus {
+  outline: none;
+  border-color: var(--theme-border-strong);
+  background: var(--theme-bg-base);
+}
+
+.app-login-input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.app-login-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--theme-text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.app-error-message {
+  color: var(--theme-danger);
+}
+
+@keyframes app-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.app-header {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 30;
+}
+
+.app-output {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  z-index: 10;
+  isolation: isolate;
+}
+
+.main-tabs {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 20;
+}
+
+.main-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--theme-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.main-tab:hover {
+  color: var(--theme-text-secondary);
+}
+
+.main-tab.is-active {
+  background: color-mix(in srgb, var(--theme-accent-strong) 12%, var(--theme-bg-overlay));
+  border-color: color-mix(in srgb, var(--theme-accent) 55%, transparent);
+  color: var(--theme-text-primary);
+}
+
+.app-input {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 0;
+  min-height: 200px;
+}
+
+.input-resizer {
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  right: 8px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ns-resize;
+  z-index: 40;
+  touch-action: none;
+}
+
+.input-resizer::before {
+  content: '';
+  width: 44px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--theme-border-subtle);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--theme-bg-base) 60%, transparent);
+}
+
+.input-resizer:hover::before {
+  background: color-mix(in srgb, var(--theme-text-secondary) 70%, transparent);
+}
+
+.output-workspace {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tool-window-layer {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.output-split {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.app-body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  gap: var(--todo-panel-gap);
+  --todo-panel-gap: 10px;
+  --todo-panel-open-width: clamp(260px, 26vw, 380px);
+  --todo-panel-collapsed-width: 30px;
+  --todo-panel-width: var(--todo-panel-open-width);
+}
+
+.app-body.todo-collapsed {
+  --todo-panel-width: var(--todo-panel-collapsed-width);
+}
+
+.app-main-column {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.side-panel-area {
+  position: relative;
+  flex: 0 0 var(--todo-panel-width);
+  width: var(--todo-panel-width);
+  min-height: 0;
+}
+
+.todo-panel {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.side-resizer {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  right: -7px;
+  width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.side-resizer::before {
+  content: '';
+  width: 3px;
+  height: 44px;
+  border-radius: 999px;
+  background: var(--theme-border-subtle);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--theme-bg-base) 60%, transparent);
+}
+
+.side-resizer:hover::before {
+  background: color-mix(in srgb, var(--theme-text-secondary) 70%, transparent);
+}
+
+.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.tool-window-canvas {
+  position: fixed;
+  top: var(--canvas-top, 0px);
+  left: 0;
+  width: 100vw;
+  height: var(--canvas-height, 100%);
+  pointer-events: none;
+  overflow: visible;
+  z-index: 20;
+  --dock-reserved: 0px;
+  --tool-top-offset: 0px;
+  --tool-area-height: var(--canvas-height, 100%);
+  --term-font-family:
+    'Iosevka Term', 'Iosevka Fixed', 'JetBrains Mono', 'Cascadia Mono', 'SFMono-Regular', Menlo,
+    Consolas, 'Liberation Mono', monospace;
+  --term-font-size: 13px;
+  --term-line-height: 1.1;
+  --term-width: 670px;
+  --term-height: 386px;
+}
+
+.output-panel {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition:
+    transform 0.15s ease-in,
+    opacity 0.15s ease-in;
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  --win-scale-x: 1.5;
+  --win-scale-y: 0;
+}
+
+/* ============================================================
+   MOBILE LAYOUT  (< 768px)
+   ============================================================ */
+
+/* Hide bottom bar on desktop */
+.mobile-bottom-bar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* Tighter outer padding on small screens */
+  .app {
+    padding: 6px 6px 0;
+    gap: 6px;
+  }
+
+  /* Stack the body as a column; no horizontal flex */
+  .app-body {
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 44px; /* reserve space for bottom bar */
+  }
+
+  /* Side panel becomes a fixed off-screen drawer */
+  .side-panel-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(300px, 85vw) !important;
+    flex: none !important;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  /* Drawer open state */
+  .app-body.mobile-drawer-open .side-panel-area {
+    transform: translateX(0);
+  }
+
+  /* Backdrop */
+  .mobile-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: color-mix(in srgb, #000 55%, transparent);
+    z-index: 49;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Main column fills full width */
+  .app-main-column {
+    flex: 1 1 auto;
+    width: 100%;
+    gap: 6px;
+  }
+
+  /* Input minimum height is smaller on mobile */
+  .app-input {
+    min-height: 130px !important;
+  }
+
+  /* Hide desktop-only drag handles */
+  .side-resizer,
+  .input-resizer {
+    display: none !important;
+  }
+
+  /* Floating windows: handled via FloatingWindow.vue on mobile */
+  /* Make the canvas a proper fixed stacking context for bottom sheets */
+  .tool-window-canvas {
+    pointer-events: none;
+    overflow: hidden;
+    /* Bottom sheets need to overflow downward */
+    overflow: visible;
+  }
+
+  /* Bottom bar */
+  .mobile-bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 44px;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+    background: var(--theme-bg-overlay);
+    border-top: 1px solid var(--theme-border);
+  }
+
+  .mobile-bottom-spacer {
+    flex: 1 1 auto;
+  }
+
+  .mobile-bottom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--theme-text-muted);
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      color 0.15s,
+      border-color 0.15s;
+  }
+
+  .mobile-bottom-btn:hover,
+  .mobile-bottom-btn.active {
+    background: var(--theme-border-subtle);
+    color: var(--theme-text-secondary);
+    border-color: var(--theme-border);
+  }
+}
+
+/* Backdrop transition */
+.mobile-backdrop-enter-active,
+.mobile-backdrop-leave-active {
+  transition: opacity 0.22s ease;
+}
+
+.mobile-backdrop-enter-from,
+.mobile-backdrop-leave-to {
+  opacity: 0;
+}

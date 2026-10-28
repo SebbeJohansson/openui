@@ -351,12 +351,8 @@ function getMessageTime(message?: MessageInfo): number | undefined {
   return msg.getTime(message.id);
 }
 
-function getAssistantMessages(root: MessageInfo): MessageInfo[] {
-  return getThread(root.id).filter((item) => item.role === 'assistant' && hasTextContent(item));
-}
-
 function hasAssistantMessages(root: MessageInfo): boolean {
-  return getAssistantMessages(root).length > 0;
+  return msg.hasAssistantMessages(root.id);
 }
 
 function getToolPartTime(part: ToolPart): number {
