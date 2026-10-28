@@ -3011,10 +3011,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"agent-conduit@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "agent-conduit@npm:0.2.0"
-  checksum: 10c0/748eeb429aecf62833da7bc3dea667885daabce9b98b90530864893d33f583332bc5854b437b3bc9955b5549b5e1565c4489ac40a2fb040c8203f6c5c52ee806
+"agent-conduit@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "agent-conduit@npm:0.3.0"
+  bin:
+    agent-conduit: bin/agent-conduit.mjs
+  checksum: 10c0/6e39ab43425b7f16c2228a8a497286c64d101af21ade6632dfbb47809d94ec61b4fee33f2abaf24c6703c31afb17eadd8ac8329ebf10b8adac0dd2ffbc36d584
   languageName: node
   linkType: hard
 
@@ -6216,7 +6218,7 @@ __metadata:
     "@types/node": "npm:^24.13.3"
     "@vue/test-utils": "npm:^2.5.0"
     "@xterm/xterm": "npm:^6.0.0"
-    agent-conduit: "npm:^0.2.0"
+    agent-conduit: "npm:^0.3.0"
     happy-dom: "npm:^20.13.2"
     markdown-it: "npm:^14.1.1"
     nuxt: "npm:^4.5.2"

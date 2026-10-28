@@ -37,6 +37,8 @@ describe('with Claude support disabled', () => {
     ['POST', '/api/claude/sessions/abc/prompt'],
     ['POST', '/api/claude/sessions/abc/abort'],
     ['POST', '/api/claude/permissions/abc/reply'],
+    ['GET', '/api/claude/hook'],
+    ['POST', '/api/claude/hook'],
   ])('404s on %s %s', async (method, path) => {
     const response = await fetchRaw(path, {
       method,

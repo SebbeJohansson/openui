@@ -229,6 +229,33 @@
             Enter a stream URL to start playing.
           </div>
         </div>
+        <div v-if="claudeEnabled && hook" class="setting-row">
+          <div class="setting-info">
+            <div class="setting-label">Claude Code permission hook</div>
+            <div class="setting-description">
+              Lets apps that read sessions through agent-conduit, such as my-widget, tell a Claude
+              Code session waiting on a permission prompt from one that is working.
+              {{ hookMessage }}
+            </div>
+          </div>
+          <button
+            type="button"
+            class="theme-action-btn"
+            :disabled="hookBusy || hook.current"
+            @click="installHook"
+          >
+            <Icon :name="hook.current ? 'lucide:check' : 'lucide:download'" :size="12" />
+            {{
+              hook.current
+                ? 'Installed'
+                : hookBusy
+                  ? 'Installing…'
+                  : hook.installed
+                    ? 'Update'
+                    : 'Install'
+            }}
+          </button>
+        </div>
       </div>
     </div>
   </dialog>
@@ -236,6 +263,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
+import { useServerConfig } from '../composables/useServerConfig';
 import { useSettings } from '../composables/useSettings';
 import { useTheme } from '../composables/useTheme';
 import { generatePalette, type SimpleThemeSeed } from '../utils/themeGenerator';
@@ -257,6 +285,42 @@ const {
 } = useSettings();
 const { themeId, customSeeds, setTheme, setCustomSeeds, updateCustomSeed, themes, CUSTOM_ID } =
   useTheme();
+const { claudeEnabled, claudeApiUrl } = useServerConfig();
+
+/** agent-conduit's Claude Code hook; null until the server has said, or when it cannot. */
+const hook = ref<{ installed: boolean; current: boolean } | null>(null);
+const hookBusy = ref(false);
+const hookMessage = ref('');
+
+async function loadHook() {
+  if (!claudeEnabled.value) return;
+  try {
+    const res = await fetch(claudeApiUrl('/hook'));
+    hook.value = res.ok ? await res.json() : null;
+  } catch {
+    hook.value = null;
+  }
+}
+
+async function installHook() {
+  hookBusy.value = true;
+  hookMessage.value = '';
+  try {
+    const res = await fetch(claudeApiUrl('/hook'), {
+      method: 'POST',
+      // The route only acts on requests carrying this, which a foreign page cannot add.
+      headers: { 'x-openui-install': '1' },
+    });
+    if (!res.ok) throw new Error(res.statusText || `HTTP ${res.status}`);
+    hook.value = await res.json();
+    hookMessage.value = 'Installed. New and restarted Claude Code sessions report their prompts.';
+  } catch (error) {
+    hookMessage.value = `Could not install it: ${error instanceof Error ? error.message : String(error)}`;
+  } finally {
+    hookBusy.value = false;
+  }
+}
+
 const themeActionMessage = ref('');
 const themeActionError = ref(false);
 const THEME_SHARE_VERSION = 1;
@@ -515,6 +579,7 @@ watch(
     if (!el) return;
     if (open) {
       if (!el.open) el.showModal();
+      void loadHook();
     } else if (el.open) {
       el.close();
     }

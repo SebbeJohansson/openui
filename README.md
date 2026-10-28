@@ -149,6 +149,7 @@ EXPERIMENTAL_CLAUDE=true OPENCODE_URL=http://localhost:4096 yarn start
 - Your Claude Code sessions from `~/.claude/projects/` appear in the same list, with their full conversation history
 - To start a new Claude Code session, use "New Claude session" in the session menu
 - To resume an old one, just select it. The server reads the session's JSONL log and serves it from `/api/claude/sessions/<id>/messages`, so the thread renders before any subprocess starts. `claude --resume` runs when you send the first prompt
+- Settings has an install button for [agent-conduit](https://github.com/SebbeJohansson/agent-conduit)'s Claude Code hook, which marks a session while it waits on a permission prompt so apps such as my-widget can show it. `yarn claude-hook:install` does the same
 
 **Environment variables:**
 

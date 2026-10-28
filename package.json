@@ -34,10 +34,12 @@
     "check": "yarn lint && yarn format:check && yarn typecheck && yarn test",
     "start": "node bin/openui.mjs",
     "test:browser": "nuxt build && playwright test",
-    "test:browser:ui": "playwright test --ui"
+    "test:browser:ui": "playwright test --ui",
+    "claude-hook:install": "agent-conduit install-claude-hook",
+    "claude-hook:uninstall": "agent-conduit uninstall-claude-hook"
   },
   "dependencies": {
-    "agent-conduit": "^0.2.0"
+    "agent-conduit": "^0.3.0"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.129",
